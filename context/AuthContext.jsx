@@ -82,5 +82,22 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  return <AuthContext.Provider value={{ user, login, logout, loading, loadUser }}>{children}</AuthContext.Provider>;
+  const register = async (name, last_name, email, password) => {
+    try {
+      const response = await axios.post(`${BACKEND_URL}users/register`, {
+        name,
+        last_name,
+        email,
+        password,
+      });
+      console.log("Rejestracja udana:", response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout, register, loading, loadUser }}>{children}</AuthContext.Provider>
+  );
 };
