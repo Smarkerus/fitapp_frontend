@@ -87,10 +87,10 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(
         `${BACKEND_URL}users/register`,
         {
-          name,
-          last_name,
-          email,
-          password,
+          email: email,
+          password: password,
+          name: name,
+          last_name: last_name,
         },
         {
           headers: {
