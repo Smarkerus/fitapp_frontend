@@ -19,8 +19,21 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Nazwa użytkownika" value={username} onChangeText={setUsername} style={styles.input} />
-      <TextInput placeholder="Hasło" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
+      <TextInput
+        placeholder="Nazwa użytkownika"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+        onSubmitEditing={handleLogin}
+      />
+      <TextInput
+        placeholder="Hasło"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+        onSubmitEditing={handleLogin}
+      />
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
         <Text style={globalStyles.buttonText}>Zaloguj</Text>

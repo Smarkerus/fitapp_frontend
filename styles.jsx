@@ -37,7 +37,6 @@ export const globalStyles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.background,
   },
-
   button: {
     backgroundColor: colors.primary,
     padding: spacing.medium,
@@ -86,7 +85,6 @@ export const globalStyles = StyleSheet.create({
     color: colors.darkGray,
     fontSize: sizes.medium,
   },
-
   input: {
     borderWidth: 1,
     borderColor: colors.lightGray,
@@ -102,7 +100,6 @@ export const globalStyles = StyleSheet.create({
   inputError: {
     borderColor: colors.error,
   },
-
   text: {
     fontSize: sizes.medium,
     color: colors.text,
@@ -118,12 +115,18 @@ export const globalStyles = StyleSheet.create({
     color: colors.darkGray,
     marginBottom: spacing.small,
   },
+  welcome: {
+    fontSize: sizes.xLarge,
+    fontWeight: "bold",
+    color: colors.darkGray,
+    textAlign: "center",
+    marginVertical: spacing.large,
+  },
   errorText: {
     color: colors.error,
     fontSize: sizes.small,
     marginTop: spacing.small,
   },
-
   listContainer: {
     flex: 1,
     padding: spacing.medium,
@@ -148,7 +151,6 @@ export const globalStyles = StyleSheet.create({
     color: colors.darkGray,
     marginTop: spacing.small,
   },
-
   separator: {
     height: 1,
     backgroundColor: colors.lightGray,
