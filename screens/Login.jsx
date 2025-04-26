@@ -1,19 +1,19 @@
-import React, { useState, useContext } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { AuthContext } from "../context/AuthContext";
-import { globalStyles } from "../styles";
+import React, { useState, useContext } from 'react';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
+import { globalStyles } from '../styles';
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
     try {
       await login(username, password);
     } catch (err) {
-      setError("Nieprawidłowe dane logowania");
+      setError('Nieprawidłowe dane logowania');
     }
   };
 
@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
         <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
           <Text style={globalStyles.buttonText}>Zaloguj</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate("Zarejestruj się")}>
+        <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate('Zarejestruj się')}>
           <Text style={globalStyles.buttonText}>Zarejestruj się</Text>
         </TouchableOpacity>
       </View>

@@ -1,15 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const colors = {
-  primary: "#4CAF50",
-  secondary: "#8BC34A",
-  background: "#F5F5F5",
-  text: "#333333",
-  accent: "#FFC107",
-  error: "red",
-  white: "#FFFFFF",
-  lightGray: "#E0E0E0",
-  darkGray: "#757575",
+  primary: '#4CAF50',
+  secondary: '#8BC34A',
+  background: '#F5F5F5',
+  text: '#333333',
+  accent: '#FFC107',
+  error: 'red',
+  white: '#FFFFFF',
+  lightGray: '#E0E0E0',
+  darkGray: '#757575',
 };
 
 const sizes = {
@@ -27,7 +27,7 @@ const spacing = {
 
 export const globalStyles = StyleSheet.create({
   background: {
-    backgroundColor: "#ECF7ED",
+    backgroundColor: '#ECF7ED',
     flex: 1,
   },
   container: {
@@ -36,51 +36,51 @@ export const globalStyles = StyleSheet.create({
   },
   centeredContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: colors.primary,
     padding: spacing.medium,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
     marginVertical: spacing.small,
   },
   buttonText: {
     color: colors.white,
     fontSize: sizes.medium,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   secondaryButton: {
     backgroundColor: colors.secondary,
     padding: spacing.medium,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
     marginVertical: spacing.small,
   },
   secondaryButtonText: {
     color: colors.white,
     fontSize: sizes.medium,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   outlineButton: {
     borderWidth: 2,
     borderColor: colors.primary,
     padding: spacing.medium,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
     marginVertical: spacing.small,
   },
   outlineButtonText: {
     color: colors.primary,
     fontSize: sizes.medium,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   disabledButton: {
     backgroundColor: colors.lightGray,
     padding: spacing.medium,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
     marginVertical: spacing.small,
   },
   disabledButtonText: {
@@ -108,7 +108,7 @@ export const globalStyles = StyleSheet.create({
   },
   title: {
     fontSize: sizes.xLarge,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.text,
     marginBottom: spacing.medium,
   },
@@ -119,9 +119,9 @@ export const globalStyles = StyleSheet.create({
   },
   welcome: {
     fontSize: sizes.xLarge,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.darkGray,
-    textAlign: "center",
+    textAlign: 'center',
     marginVertical: spacing.large,
   },
   errorText: {
@@ -138,7 +138,7 @@ export const globalStyles = StyleSheet.create({
     padding: spacing.medium,
     borderRadius: 8,
     marginVertical: spacing.small,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -163,7 +163,7 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.medium,
     marginVertical: spacing.small,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
@@ -171,7 +171,7 @@ export const globalStyles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: sizes.large,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.text,
   },
 });

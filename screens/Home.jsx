@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { AuthContext } from "../context/AuthContext";
-import { globalStyles } from "../styles";
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
+import { globalStyles } from '../styles';
 
 export default function Home() {
   const { user, logout, loadUser } = useContext(AuthContext);
