@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -11,29 +11,26 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      let token;
-      if (Platform.OS === "web") {
-        token = await AsyncStorage.getItem("userToken");
-      } else {
-        token = await SecureStore.getItemAsync("userToken");
+  const loadUser = async () => {
+    let token;
+    if (Platform.OS === "web") {
+      token = await AsyncStorage.getItem("userToken");
+    } else {
+      token = await SecureStore.getItemAsync("userToken");
+    }
+    if (token) {
+      try {
+        let userData = await fetchUserData(token);
+        setUser({ token: token, ...userData });
+        console.log("Udało się wczytać token:", token, userData, user);
+      } catch (error) {
+        await logout();
       }
-      if (token) {
-        try {
-          let userData = await fetchUserData(token);
-          setUser({ token: token, ...userData });
-          console.log("Udało się wczytać token:", token, userData, user);
-        } catch (error) {
-          await logout();
-        }
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    };
-    loadUser();
-  }, []);
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
+  };
 
   const fetchUserData = async (token) => {
     try {
@@ -85,5 +82,5 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  return <AuthContext.Provider value={{ user, login, logout, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, login, logout, loading, loadUser }}>{children}</AuthContext.Provider>;
 };
