@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
       <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
         <Text style={globalStyles.buttonText}>Zaloguj</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate("Register")}>
+      <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate("Zarejestruj się")}>
         <Text style={globalStyles.buttonText}>Zarejestruj się</Text>
       </TouchableOpacity>
     </View>
