@@ -3,6 +3,8 @@ name: Prettier Check
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   prettier:
@@ -21,4 +23,12 @@ jobs:
         run: npm ci
 
       - name: Run Prettier
-        run: npx prettier --check .
+        run: npx prettier --write .
+
+      - name: Commit formatted files
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add .
+          git commit -m "chore: automatyczne formatowanie kodu przy pomocy Prettier" || echo "No changes to commit"
+          git push
