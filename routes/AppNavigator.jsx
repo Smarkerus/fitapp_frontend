@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import AuthStack from "./AuthStack";
-import MainStack from "./MainStack";
-import * as SplashScreen from "expo-splash-screen";
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import AuthStack from './AuthStack';
+import MainStack from './MainStack';
+import * as SplashScreen from 'expo-splash-screen';
 
 function AppNavigator() {
   const { user, loadUser } = useContext(AuthContext);

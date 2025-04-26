@@ -1,11 +1,11 @@
-import React, { createContext, useState } from "react";
-import * as SecureStore from "expo-secure-store";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { Platform } from "react-native";
+import React, { createContext, useState } from 'react';
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { Platform } from 'react-native';
 
 export const AuthContext = createContext();
-const BACKEND_URL = "http://localhost:8000/";
+const BACKEND_URL = 'http://localhost:8000/';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -13,16 +13,16 @@ export const AuthProvider = ({ children }) => {
 
   const loadUser = async () => {
     let token;
-    if (Platform.OS === "web") {
-      token = await AsyncStorage.getItem("userToken");
+    if (Platform.OS === 'web') {
+      token = await AsyncStorage.getItem('userToken');
     } else {
-      token = await SecureStore.getItemAsync("userToken");
+      token = await SecureStore.getItemAsync('userToken');
     }
     if (token) {
       try {
         let userData = await fetchUserData(token);
         setUser({ token: token, ...userData });
-        console.log("Udało się wczytać token:", token, userData, user);
+        console.log('Udało się wczytać token:', token, userData, user);
       } catch (error) {
         await logout();
       }
@@ -32,16 +32,17 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
-  const fetchUserData = async (token) => {
+  const fetchUserData = async token => {
     try {
       const response = await axios.get(`${BACKEND_URL}users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Pobrano info o użytkowniku: ", response.data);
+      console.log('Pobrano info o użytkowniku: ', response.data);
       return response.data;
     } catch (error) {
+      console.error('Bład pobierania info o użytkowniku:', error);
       throw error;
     }
   };
@@ -49,37 +50,46 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const formData = new URLSearchParams();
-      formData.append("username", username);
-      formData.append("password", password);
+      formData.append('username', username);
+      formData.append('password', password);
 
       const response = await axios.post(`${BACKEND_URL}users/login`, formData.toString(), {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
 
       const access_token = response.data.access_token;
 
-      if (Platform.OS === "web") {
-        await AsyncStorage.setItem("userToken", access_token);
+      if (Platform.OS === 'web') {
+        await AsyncStorage.setItem('userToken', access_token);
       } else {
-        await SecureStore.setItemAsync("userToken", access_token);
+        await SecureStore.setItemAsync('userToken', access_token);
       }
 
       const userData = await fetchUserData(access_token);
       setUser({ token: access_token, ...userData });
     } catch (error) {
+      console.error('Bład logowania:', error);
       throw error;
     }
   };
 
   const logout = async () => {
-    if (Platform.OS === "web") {
-      await AsyncStorage.removeItem("userToken");
-    } else {
-      await SecureStore.deleteItemAsync("userToken");
+    try {
+      const response = await axios.post(`${BACKEND_URL}users/logout`);
+      if (response.status === 200) {
+        if (Platform.OS === 'web') {
+          await AsyncStorage.removeItem('userToken');
+        } else {
+          await SecureStore.deleteItemAsync('userToken');
+        }
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Bład wylogowywania:', error);
+      throw error;
     }
-    setUser(null);
   };
 
   const register = async (email, password, name, last_name) => {
@@ -94,17 +104,35 @@ export const AuthProvider = ({ children }) => {
         },
         {
           headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
+            'Content-Type': 'application/json',
+            accept: 'application/json',
           },
         }
       );
     } catch (error) {
+      console.error('Bład rejestracji użytkownika:', error);
+      throw error;
+    }
+  };
+
+  const fetchUserTrips = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}trips/trips`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Pobrano info o trasach użytkownika: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Bład pobierania danych o trasach użytkownika:', error);
       throw error;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, loading, loadUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, login, logout, register, loading, loadUser, fetchUserTrips }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
