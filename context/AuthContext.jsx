@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const register = async (name, last_name, email, password) => {
+  const register = async (email, password, name, last_name) => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}users/register`,
@@ -99,9 +99,7 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-      console.log("Rejestracja udana:", response.data);
     } catch (error) {
-      console.error("Błąd rejestracji:", error.response?.data || error.message);
       throw error;
     }
   };
