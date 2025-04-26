@@ -7,7 +7,7 @@ import { Platform } from "react-native";
 export const AuthContext = createContext();
 const BACKEND_URL = "http://localhost:8000/";
 
-export const AuthProvider = ({ navigation, children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 

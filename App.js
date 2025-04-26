@@ -3,8 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
-import Login from "./Login";
-import Home from "./Home";
+import Login from "./screens/Login";
+import Home from "./screens/Home";
 
 const Stack = createStackNavigator();
 

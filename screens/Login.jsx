@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { View, TextInput, Button, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { AuthContext } from "./context/AuthContext";
-import { globalStyles } from "./styles";
+import { AuthContext } from "../context/AuthContext";
+import { globalStyles } from "../styles";
 
 export default function Login({ navigation }) {
   const [username, setUsername] = useState("");
