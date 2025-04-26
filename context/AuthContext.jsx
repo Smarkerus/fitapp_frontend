@@ -9,7 +9,6 @@ const BACKEND_URL = 'http://localhost:8000/';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const loadUser = async () => {
     let token;
@@ -29,7 +28,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       setUser(null);
     }
-    setLoading(false);
   };
 
   const fetchUserData = async token => {
@@ -131,7 +129,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, loading, loadUser, fetchUserTrips }}>
+    <AuthContext.Provider value={{ user, login, logout, register, loadUser, fetchUserTrips }}>
       {children}
     </AuthContext.Provider>
   );
