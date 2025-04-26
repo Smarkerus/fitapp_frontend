@@ -18,35 +18,34 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="Nazwa użytkownika"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-        onSubmitEditing={handleLogin}
-      />
-      <TextInput
-        placeholder="Hasło"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-        onSubmitEditing={handleLogin}
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
-        <Text style={globalStyles.buttonText}>Zaloguj</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate("Zarejestruj się")}>
-        <Text style={globalStyles.buttonText}>Zarejestruj się</Text>
-      </TouchableOpacity>
+    <View style={globalStyles.background}>
+      <View style={globalStyles.container}>
+        <Text style={globalStyles.title}>Podaj dane logowania</Text>
+        <Text style={globalStyles.subtitle}>Email</Text>
+        <TextInput
+          placeholder="Nazwa użytkownika"
+          value={username}
+          onChangeText={setUsername}
+          style={globalStyles.input}
+          onSubmitEditing={handleLogin}
+        />
+        <Text style={globalStyles.subtitle}>Hasło</Text>
+        <TextInput
+          placeholder="Hasło"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={globalStyles.input}
+          onSubmitEditing={handleLogin}
+        />
+        {error ? <Text style={globalStyles.errorText}>{error}</Text> : null}
+        <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
+          <Text style={globalStyles.buttonText}>Zaloguj</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate("Zarejestruj się")}>
+          <Text style={globalStyles.buttonText}>Zarejestruj się</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20 },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10 },
-  error: { color: "red", marginBottom: 10 },
-});

@@ -6,7 +6,7 @@ const colors = {
   background: "#F5F5F5",
   text: "#333333",
   accent: "#FFC107",
-  error: "#F44336",
+  error: "red",
   white: "#FFFFFF",
   lightGray: "#E0E0E0",
   darkGray: "#757575",
@@ -26,16 +26,18 @@ const spacing = {
 };
 
 export const globalStyles = StyleSheet.create({
+  background: {
+    backgroundColor: "#ECF7ED",
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     padding: spacing.medium,
   },
   centeredContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.background,
   },
   button: {
     backgroundColor: colors.primary,

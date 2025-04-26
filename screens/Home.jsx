@@ -18,11 +18,13 @@ export default function Home() {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Text style={globalStyles.welcome}>Witaj, {user?.name ?? "Użytkowniku"}!</Text>
-      <TouchableOpacity style={globalStyles.button} onPress={handleLogout}>
-        <Text style={globalStyles.buttonText}>Wyloguj</Text>
-      </TouchableOpacity>
+    <View style={globalStyles.background}>
+      <View style={globalStyles.container}>
+        <Text style={globalStyles.welcome}>Witaj, {user.name}!</Text>
+        <TouchableOpacity style={globalStyles.button} onPress={handleLogout}>
+          <Text style={globalStyles.buttonText}>Wyloguj</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
