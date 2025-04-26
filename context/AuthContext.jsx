@@ -84,15 +84,24 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, last_name, email, password) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}users/register`, {
-        name,
-        last_name,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${BACKEND_URL}users/register`,
+        {
+          name,
+          last_name,
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+          },
+        }
+      );
       console.log("Rejestracja udana:", response.data);
-      return response.data;
     } catch (error) {
+      console.error("Błąd rejestracji:", error.response?.data || error.message);
       throw error;
     }
   };
