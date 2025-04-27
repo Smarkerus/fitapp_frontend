@@ -34,3 +34,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# pnpm
+.pnpm/
+pnpm-lock.yaml
+.pnpm-debug.log

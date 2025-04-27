@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import AuthStack from './AuthStack';
-import MainStack from './MainStack';
+import DrawerStack from './DrawerStack';
 import * as SplashScreen from 'expo-splash-screen';
 
 function AppNavigator() {
@@ -21,7 +21,7 @@ function AppNavigator() {
     return null;
   }
 
-  return user ? <MainStack /> : <AuthStack />;
+  return user ? <DrawerStack /> : <AuthStack />;
 }
 
 export default AppNavigator;
