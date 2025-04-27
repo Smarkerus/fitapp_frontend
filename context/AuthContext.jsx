@@ -5,7 +5,9 @@ import axios from 'axios';
 import { Platform } from 'react-native';
 
 export const AuthContext = createContext();
-const BACKEND_URL = 'http://localhost:8000/';
+
+// TODO: Zmienić na adres backendu w chmurze, na razie localhost
+const BACKEND_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8000/' : 'http://localhost:8000/';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
