@@ -115,15 +115,38 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserTrips = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}trips/trips`, {
+      const tripsListResponse = await axios.get(`${BACKEND_URL}trips/trips_list`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      console.log('Pobrano info o trasach użytkownika: ', response.data);
+      console.log('Pobrano info o trasach użytkownika: ', tripsListResponse.data);
+
+      // const tripIds = tripsListResponse.data.map(trip => trip.session_id);
+      const tripIds = tripsListResponse.data.map(trip => trip);
+
+      const tripDetailsPromises = tripIds.map(tripId => fetchUserTripsDetails(tripId));
+      const tripDetails = await Promise.all(tripDetailsPromises);
+
+      console.log('Pobrano szczegóły wszystkich tras użytkownika: ', tripDetails);
+      return tripDetails;
+    } catch (error) {
+      console.error('Błąd pobierania danych o trasach użytkownika:', error);
+      throw error;
+    }
+  };
+
+  const fetchUserTripsDetails = async tripId => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}trips/trips/${tripId}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Pobrano szczegóły trasy: ', response.data);
       return response.data;
     } catch (error) {
-      console.error('Bład pobierania danych o trasach użytkownika:', error);
+      console.error('Bład pobierania szczegółów trasy:', error);
       throw error;
     }
   };
