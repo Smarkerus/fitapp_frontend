@@ -153,6 +153,10 @@ export const globalStyles = StyleSheet.create({
     color: colors.darkGray,
     marginTop: spacing.small,
   },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
   separator: {
     height: 1,
     backgroundColor: colors.lightGray,
@@ -174,4 +178,5 @@ export const globalStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
+  colors: colors,
 });

@@ -1,25 +1,130 @@
-import { View, Text } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { globalStyles } from '../styles';
 import React, { useEffect, useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import MapView, { PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
 
 export default function MyTrips() {
   const { fetchUserTrips } = useContext(AuthContext);
   const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [expandedTripId, setExpandedTripId] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getTrips = async () => {
+      setLoading(true);
       const userTrips = await fetchUserTrips();
-      setTrips(userTrips);
-      console.log('Pobrano informacje o trasach: ', userTrips);
+      setTrips(userTrips.slice(0, 25));
+      setLoading(false);
+      console.log('Pobrano informacje o trasach: ', userTrips[0]);
     };
     getTrips();
   }, []);
+
+  const computeAverageSpeed = trip => {
+    console.log('Weszło');
+    if (trip.summary.duration > 0 && trip.summary.distance > 0) {
+      let averageSpeed = trip.summary.distance / 1000 / (trip.summary.duration / 3600);
+      console.log('Średnia prędkość: ', averageSpeed);
+      return averageSpeed;
+    } else if (trip.summary.distance > 0) {
+      let tempEndTime = new Date(trip.points[trip.points.length - 1].timestamp);
+      let tempAverageSpeed =
+        trip.summary.distance / 1000 / ((tempEndTime - new Date(trip.summary.start_time)) / 3600000);
+      console.log('Średnia prędkość tymczasowa: ', tempAverageSpeed);
+      return tempAverageSpeed;
+    }
+    return 0;
+  };
+
+  const toggleTripDetails = tripId => {
+    setExpandedTripId(expandedTripId === tripId ? null : tripId);
+  };
+
+  const renderTripItem = ({ item }) => {
+
+    return (
+      <TouchableOpacity style={globalStyles.card} onPress={() => toggleTripDetails(item.id)}>
+        <Text style={globalStyles.cardTitle}>{item.name || `Trasa ${item.summary.trip_id}`}</Text>
+        <Text style={globalStyles.listItemSubtitle}>
+          Data rozpoczęcia:{' '}
+          {new Date(item.summary.start_time).toLocaleString('pl-PL', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </Text>
+        {item.summary.end_time && (
+          <Text style={globalStyles.listItemSubtitle}>
+            Data zakończenia:{' '}
+            {new Date(item.summary.end_time).toLocaleString('pl-PL', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </Text>
+        )}
+        <Text style={globalStyles.listItemSubtitle}>Dystans: {(item.summary.distance / 1000).toFixed(2)} km</Text>
+        {expandedTripId === item.id && (
+          <View style={{ marginTop: 16 }}>
+            <Text style={globalStyles.listItemText}>Czas: {(item.summary.duration / 3600).toFixed(2)} h</Text>
+            <Text style={globalStyles.listItemText}>Średnia prędkość: {computeAverageSpeed(item).toFixed(2)} km/h</Text>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={{ height: 200, marginTop: 16 }}
+              initialRegion={{
+                latitude: item.points[0].latitude,
+                longitude: item.points[0].longitude,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+              }}
+            >
+              <Polyline coordinates={item.points} strokeColor={globalStyles.colors.primary} strokeWidth={3} />
+            </MapView>
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={[globalStyles.background, globalStyles.centeredContainer]}>
+        <ActivityIndicator size="large" color={globalStyles.colors.primary} />
+        <Text style={[globalStyles.text, { marginTop: 16 }]}>Ładowanie tras...</Text>
+      </View>
+    );
+  }
+
+  if (trips.length === 0) {
+    return (
+      <View style={[globalStyles.background, globalStyles.centeredContainer]}>
+        <Text style={globalStyles.subtitle}>
+          Hej, nie masz jeszcze żadnych tras! Może czas rozpocząć jakąś aktywność?
+        </Text>
+        <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate('Activities')}>
+          <Text style={globalStyles.buttonText}>Przejdź do aktywności</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={globalStyles.background}>
       <View style={globalStyles.container}>
         <Text style={globalStyles.title}>Moje trasy</Text>
+        <FlatList
+          data={trips}
+          renderItem={renderTripItem}
+          keyExtractor={item => item.session_id}
+          contentContainerStyle={globalStyles.listContainer}
+        />
       </View>
     </View>
   );
