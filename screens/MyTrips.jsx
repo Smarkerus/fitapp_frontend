@@ -44,7 +44,6 @@ export default function MyTrips() {
   };
 
   const renderTripItem = ({ item }) => {
-
     return (
       <TouchableOpacity style={globalStyles.card} onPress={() => toggleTripDetails(item.id)}>
         <Text style={globalStyles.cardTitle}>{item.name || `Trasa ${item.summary.trip_id}`}</Text>
