@@ -4,8 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/Home';
 import MyTrips from '../screens/MyTrips';
 // import MyAchievements from '../screens/MyAchievements';
-// import ActivityMap from '../screens/ActivityMap';
-import { globalStyles } from '../styles';
+import MyActivity from '../screens/MyActivity';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,8 +24,8 @@ const DrawerStack = () => {
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Moje trasy" component={MyTrips} />
-      {/* <Drawer.Screen name="Moje osiągnięcia" component={MyAchievements} />
-      <Drawer.Screen name="Nowa aktywność" component={ActivityMap} /> */}
+      {/* <Drawer.Screen name="Moje osiągnięcia" component={MyAchievements} />} */}
+      <Drawer.Screen name="Nowa aktywność" component={MyActivity} />
     </Drawer.Navigator>
   );
 };

@@ -162,6 +162,16 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: colors.lightGray,
     marginVertical: spacing.medium,
   },
+  scrollView: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    padding: 16,
+  },
   card: {
     backgroundColor: colors.white,
     borderRadius: 12,
@@ -179,4 +189,6 @@ export const globalStyles = StyleSheet.create({
     color: colors.text,
   },
   colors: colors,
+  spacing: spacing,
+  sizes: sizes,
 });

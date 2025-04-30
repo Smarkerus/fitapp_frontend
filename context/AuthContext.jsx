@@ -153,8 +153,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const uploadGpsPoints = async points => {
+    try {
+      console.log('Punkty GPS do przesłania:', points);
+      const response = await axios.post(`${BACKEND_URL}gps/`, points, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Punkty GPS zostały przesłane pomyślnie:', response.data);
+      return true;
+    } catch (error) {
+      console.error('Błąd przesyłania punktów GPS:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, loadUser, fetchUserTrips }}>
+    <AuthContext.Provider value={{ user, login, logout, register, loadUser, fetchUserTrips, uploadGpsPoints }}>
       {children}
     </AuthContext.Provider>
   );

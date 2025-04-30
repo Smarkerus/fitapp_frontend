@@ -1,9 +1,10 @@
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { globalStyles } from '../styles';
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import MapView, { PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MyTrips() {
   const { fetchUserTrips } = useContext(AuthContext);
@@ -12,40 +13,39 @@ export default function MyTrips() {
   const [expandedTripId, setExpandedTripId] = useState(null);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getTrips = async () => {
-      setLoading(true);
-      const userTrips = await fetchUserTrips();
-      setTrips(userTrips.slice(0, 25));
-      setLoading(false);
-      console.log('Pobrano informacje o trasach: ', userTrips[0]);
-    };
-    getTrips();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const getTrips = async () => {
+        setLoading(true);
+        const userTrips = await fetchUserTrips();
+        setTrips(userTrips.slice(0, 25));
+        setLoading(false);
+        console.log('Pobrano informacje o trasach: ', userTrips[0]);
+      };
+      getTrips();
+    }, [fetchUserTrips])
+  );
 
   const computeAverageSpeed = trip => {
-    console.log('Weszło');
     if (trip.summary.duration > 0 && trip.summary.distance > 0) {
       let averageSpeed = trip.summary.distance / 1000 / (trip.summary.duration / 3600);
-      console.log('Średnia prędkość: ', averageSpeed);
       return averageSpeed;
     } else if (trip.summary.distance > 0) {
       let tempEndTime = new Date(trip.points[trip.points.length - 1].timestamp);
       let tempAverageSpeed =
         trip.summary.distance / 1000 / ((tempEndTime - new Date(trip.summary.start_time)) / 3600000);
-      console.log('Średnia prędkość tymczasowa: ', tempAverageSpeed);
       return tempAverageSpeed;
     }
     return 0;
   };
 
   const toggleTripDetails = tripId => {
-    setExpandedTripId(expandedTripId === tripId ? null : tripId);
+    setExpandedTripId(prevId => (prevId === tripId ? null : tripId));
   };
 
   const renderTripItem = ({ item }) => {
     return (
-      <TouchableOpacity style={globalStyles.card} onPress={() => toggleTripDetails(item.id)}>
+      <TouchableOpacity style={globalStyles.card} onPress={() => toggleTripDetails(item.summary.trip_id)}>
         <Text style={globalStyles.cardTitle}>{item.name || `Trasa ${item.summary.trip_id}`}</Text>
         <Text style={globalStyles.listItemSubtitle}>
           Data rozpoczęcia:{' '}
@@ -70,22 +70,28 @@ export default function MyTrips() {
           </Text>
         )}
         <Text style={globalStyles.listItemSubtitle}>Dystans: {(item.summary.distance / 1000).toFixed(2)} km</Text>
-        {expandedTripId === item.id && (
+        {expandedTripId === item.summary.trip_id && (
           <View style={{ marginTop: 16 }}>
             <Text style={globalStyles.listItemText}>Czas: {(item.summary.duration / 3600).toFixed(2)} h</Text>
             <Text style={globalStyles.listItemText}>Średnia prędkość: {computeAverageSpeed(item).toFixed(2)} km/h</Text>
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              style={{ height: 200, marginTop: 16 }}
-              initialRegion={{
-                latitude: item.points[0].latitude,
-                longitude: item.points[0].longitude,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
-              }}
-            >
-              <Polyline coordinates={item.points} strokeColor={globalStyles.colors.primary} strokeWidth={3} />
-            </MapView>
+            <View style={{ height: 200, marginTop: 16 }}>
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={{ flex: 1 }}
+                initialRegion={{
+                  latitude: item.points[0].latitude,
+                  longitude: item.points[0].longitude,
+                  latitudeDelta: 0.05,
+                  longitudeDelta: 0.05,
+                }}
+                scrollEnabled={false}
+                zoomEnabled={false}
+                pitchEnabled={false}
+                rotateEnabled={false}
+              >
+                <Polyline coordinates={item.points} strokeColor={globalStyles.colors.primary} strokeWidth={3} />
+              </MapView>
+            </View>
           </View>
         )}
       </TouchableOpacity>
@@ -107,7 +113,7 @@ export default function MyTrips() {
         <Text style={globalStyles.subtitle}>
           Hej, nie masz jeszcze żadnych tras! Może czas rozpocząć jakąś aktywność?
         </Text>
-        <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate('Activities')}>
+        <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate('Nowa aktywność')}>
           <Text style={globalStyles.buttonText}>Przejdź do aktywności</Text>
         </TouchableOpacity>
       </View>
@@ -115,16 +121,21 @@ export default function MyTrips() {
   }
 
   return (
-    <View style={globalStyles.background}>
-      <View style={globalStyles.container}>
-        <Text style={globalStyles.title}>Moje trasy</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={globalStyles.background}>
         <FlatList
           data={trips}
           renderItem={renderTripItem}
-          keyExtractor={item => item.session_id}
+          keyExtractor={item => item.summary.session_id}
+          showsVerticalScrollIndicator={true}
+          ListHeaderComponent={
+            <View style={globalStyles.container}>
+              <Text style={globalStyles.title}>Moje trasy</Text>
+            </View>
+          }
           contentContainerStyle={globalStyles.listContainer}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
