@@ -41,6 +41,32 @@ export default function MyTrips() {
     return 0;
   };
 
+  const getRegionForCoordinates = points => {
+    let minLat = points[0].latitude;
+    let maxLat = points[0].latitude;
+    let minLon = points[0].longitude;
+    let maxLon = points[0].longitude;
+
+    points.forEach(point => {
+      minLat = Math.min(minLat, point.latitude);
+      maxLat = Math.max(maxLat, point.latitude);
+      minLon = Math.min(minLon, point.longitude);
+      maxLon = Math.max(maxLon, point.longitude);
+    });
+
+    const latitude = (minLat + maxLat) / 2;
+    const longitude = (minLon + maxLon) / 2;
+    const latitudeDelta = (maxLat - minLat) * 1.2;
+    const longitudeDelta = (maxLon - minLon) * 1.2;
+
+    return {
+      latitude,
+      longitude,
+      latitudeDelta: latitudeDelta || 0.05,
+      longitudeDelta: longitudeDelta || 0.05,
+    };
+  };
+
   const toggleTripDetails = tripId => {
     setExpandedTripId(prevId => (prevId === tripId ? null : tripId));
   };
@@ -85,12 +111,7 @@ export default function MyTrips() {
               <MapView
                 provider={PROVIDER_GOOGLE}
                 style={{ flex: 1 }}
-                initialRegion={{
-                  latitude: item.points[0].latitude,
-                  longitude: item.points[0].longitude,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
-                }}
+                region={getRegionForCoordinates(item.points)}
                 scrollEnabled={false}
                 zoomEnabled={false}
                 pitchEnabled={false}
