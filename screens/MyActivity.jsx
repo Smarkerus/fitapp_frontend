@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MyActivity = () => {
   const { user, uploadGpsPoints } = useContext(AuthContext);
@@ -177,7 +178,7 @@ const MyActivity = () => {
   };
 
   return (
-    <View style={globalStyles.background}>
+    <SafeAreaView style={globalStyles.background} edges={['right', 'bottom', 'left']}>
       <View style={globalStyles.container}>
         {!isActive && <Text style={globalStyles.title}>Rozpocznij nową aktywność</Text>}
         {!isActive ? (
@@ -209,7 +210,7 @@ const MyActivity = () => {
           </View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

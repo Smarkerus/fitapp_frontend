@@ -1,10 +1,12 @@
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { globalStyles } from '../styles';
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import MapView, { PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { FlatList } from 'react-native-gesture-handler';
 
 export default function MyTrips() {
   const { fetchUserTrips } = useContext(AuthContext);
@@ -45,22 +47,12 @@ export default function MyTrips() {
 
   const renderTripItem = ({ item }) => {
     return (
-      <TouchableOpacity style={globalStyles.card} onPress={() => toggleTripDetails(item.summary.trip_id)}>
-        <Text style={globalStyles.cardTitle}>{item.name || `Trasa ${item.summary.trip_id}`}</Text>
-        <Text style={globalStyles.listItemSubtitle}>
-          Data rozpoczęcia:{' '}
-          {new Date(item.summary.start_time).toLocaleString('pl-PL', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </Text>
-        {item.summary.end_time && (
+      <View style={globalStyles.card}>
+        <TouchableOpacity onPress={() => toggleTripDetails(item.summary.trip_id)}>
+          <Text style={globalStyles.cardTitle}>{item.name || `Trasa ${item.summary.trip_id}`}</Text>
           <Text style={globalStyles.listItemSubtitle}>
-            Data zakończenia:{' '}
-            {new Date(item.summary.end_time).toLocaleString('pl-PL', {
+            Data rozpoczęcia:{' '}
+            {new Date(item.summary.start_time).toLocaleString('pl-PL', {
               year: 'numeric',
               month: '2-digit',
               day: '2-digit',
@@ -68,12 +60,27 @@ export default function MyTrips() {
               minute: '2-digit',
             })}
           </Text>
-        )}
-        <Text style={globalStyles.listItemSubtitle}>Dystans: {(item.summary.distance / 1000).toFixed(2)} km</Text>
+          {item.summary.end_time && (
+            <Text style={globalStyles.listItemSubtitle}>
+              Data zakończenia:{' '}
+              {new Date(item.summary.end_time).toLocaleString('pl-PL', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </Text>
+          )}
+          <Text style={globalStyles.listItemSubtitle}>Dystans: {(item.summary.distance / 1000).toFixed(2)} km</Text>
+        </TouchableOpacity>
         {expandedTripId === item.summary.trip_id && (
-          <View style={{ marginTop: 16 }}>
+          <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(300)} style={{ marginTop: 16 }}>
             <Text style={globalStyles.listItemText}>Czas: {(item.summary.duration / 3600).toFixed(2)} h</Text>
             <Text style={globalStyles.listItemText}>Średnia prędkość: {computeAverageSpeed(item).toFixed(2)} km/h</Text>
+            <Text style={globalStyles.listItemText}>
+              Liczba spalonych kalorii: {Number(item.summary.calories_burned).toFixed(0)} kCal
+            </Text>
             <View style={{ height: 200, marginTop: 16 }}>
               <MapView
                 provider={PROVIDER_GOOGLE}
@@ -92,9 +99,9 @@ export default function MyTrips() {
                 <Polyline coordinates={item.points} strokeColor={globalStyles.colors.primary} strokeWidth={3} />
               </MapView>
             </View>
-          </View>
+          </Animated.View>
         )}
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -121,20 +128,10 @@ export default function MyTrips() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={globalStyles.background}>
-        <FlatList
-          data={trips}
-          renderItem={renderTripItem}
-          keyExtractor={item => item.summary.session_id}
-          showsVerticalScrollIndicator={true}
-          ListHeaderComponent={
-            <View style={globalStyles.container}>
-              <Text style={globalStyles.title}>Moje trasy</Text>
-            </View>
-          }
-          contentContainerStyle={globalStyles.listContainer}
-        />
+    <SafeAreaView style={globalStyles.background} edges={['right', 'bottom', 'left']}>
+      <View style={globalStyles.container}>
+        <Text style={globalStyles.title}>Moje trasy</Text>
+        <FlatList data={trips} renderItem={renderTripItem} keyExtractor={item => item.summary.session_id.toString()} />
       </View>
     </SafeAreaView>
   );
