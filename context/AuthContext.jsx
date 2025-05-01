@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -11,6 +11,25 @@ const BACKEND_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8000/' : 'http:
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [activityTypes, setActivityTypes] = useState({});
+  const [activityTypesLoaded, setActivityTypesLoaded] = useState(false);
+
+  const loadActivityTypes = async () => {
+    try {
+      const types = await fetchActibityTypes();
+      setActivityTypes(types);
+      setActivityTypesLoaded(true);
+      console.log('Pobrano typy aktywności: ', types);
+    } catch (error) {
+      console.error('Failed to load activity types:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user && !activityTypesLoaded) {
+      loadActivityTypes();
+    }
+  }, [user]);
 
   const loadUser = async () => {
     let token;
@@ -170,8 +189,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchActibityTypes = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}trips/activity_types/`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Pobrano typy aktywności: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Błąd pobierania typów aktywności:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, loadUser, fetchUserTrips, uploadGpsPoints }}>
+    <AuthContext.Provider
+      value={{ activityTypes, user, login, logout, register, loadUser, fetchUserTrips, uploadGpsPoints }}
+    >
       {children}
     </AuthContext.Provider>
   );

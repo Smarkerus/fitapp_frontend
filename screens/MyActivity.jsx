@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MyActivity = () => {
-  const { user, uploadGpsPoints } = useContext(AuthContext);
+  const { user, uploadGpsPoints, activityTypes } = useContext(AuthContext);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const [sessionId, setSessionId] = useState('');
@@ -17,7 +17,7 @@ const MyActivity = () => {
   const [startTime, setStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  const activityTypes = [
+  const mappedActivityTypes = [
     { label: 'Bieganie', value: 'RUNNING', icon: 'directions-run' },
     { label: 'Jazda na rowerze', value: 'CYCLING', icon: 'directions-bike' },
     { label: 'Chodzenie', value: 'WALKING', icon: 'directions-walk' },
@@ -74,7 +74,7 @@ const MyActivity = () => {
     }
   };
 
-  const startTracking = async sessionId => {
+  const startTracking = async (sessionId, activityType) => {
     const subscription = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
@@ -90,6 +90,7 @@ const MyActivity = () => {
           latitude: location.coords.latitude + randomOffset(),
           longitude: location.coords.longitude + randomOffset(),
           acceleration: 0,
+          activity: activityTypes[activityType],
           last_entry: false,
         };
         setGpsPoints(prev => [...prev, point]);
@@ -101,27 +102,23 @@ const MyActivity = () => {
 
   const handleStartActivity = async activityType => {
     if (!(await requestLocationPermissions())) return;
-
+    setSelectedActivity(activityType);
     const newSessionId = generateSessionId();
     setSessionId(newSessionId);
-    setSelectedActivity(activityType);
     setIsActive(true);
     setStartTime(Date.now());
-
-    await startTracking(newSessionId);
+    await startTracking(newSessionId, activityType);
+    console.log('Start: aktywności ', activityType, 'wartość z API: ', activityTypes[activityType]);
   };
-
   const handleEndActivity = async () => {
     if (gpsPoints.length > 0) {
       const lastPoint = { ...gpsPoints[gpsPoints.length - 1], last_entry: true };
       await saveGpsPoint(lastPoint);
     } else {
       try {
-        // Pobierz aktualną lokalizację
         const location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.High,
         });
-
         const randomOffset = () => (Math.random() - 0.5) * 0.0001;
         const point = {
           session_id: sessionId,
@@ -130,20 +127,18 @@ const MyActivity = () => {
           latitude: location.coords.latitude + randomOffset(),
           longitude: location.coords.longitude + randomOffset(),
           acceleration: 0,
+          activity: activityTypes[selectedActivity],
           last_entry: true,
         };
         await saveGpsPoint(point);
       } catch (error) {
         console.error('Błąd pobierania lokalizacji:', error);
-        Alert.alert('Błąd', 'Nie udało się pobrać lokalizacji dla ostatniego punktu.');
       }
     }
-
     if (locationSubscription) {
       locationSubscription.remove();
       setLocationSubscription(null);
     }
-
     setIsActive(false);
     setSessionId(null);
     setSelectedActivity(null);
@@ -173,7 +168,7 @@ const MyActivity = () => {
   };
 
   const getActivityIcon = activityValue => {
-    const activity = activityTypes.find(a => a.value === activityValue);
+    const activity = mappedActivityTypes.find(a => a.value === activityValue);
     return activity ? activity.icon : 'more-horiz';
   };
 
@@ -183,7 +178,7 @@ const MyActivity = () => {
         {!isActive && <Text style={globalStyles.title}>Rozpocznij nową aktywność</Text>}
         {!isActive ? (
           <View style={styles.activityList}>
-            {activityTypes.map(activity => (
+            {mappedActivityTypes.map(activity => (
               <TouchableOpacity
                 key={activity.value}
                 style={[globalStyles.button, styles.activityButton]}
@@ -201,7 +196,9 @@ const MyActivity = () => {
           <View style={globalStyles.centeredContainer}>
             <View style={styles.activeActivityContainer}>
               <Icon name={getActivityIcon(selectedActivity)} size={48} color={globalStyles.colors.primary} />
-              <Text style={globalStyles.subtitle}>{activityTypes.find(a => a.value === selectedActivity)?.label}</Text>
+              <Text style={globalStyles.subtitle}>
+                {mappedActivityTypes.find(a => a.value === selectedActivity)?.label}
+              </Text>
               <Text style={styles.timer}>{formatTime(elapsedTime)}</Text>
             </View>
             <TouchableOpacity style={[globalStyles.button, styles.stopButton]} onPress={handleEndActivity}>
