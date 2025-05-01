@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Image } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/Home';
 import MyTrips from '../screens/MyTrips';
 // import MyAchievements from '../screens/MyAchievements';
 import MyActivity from '../screens/MyActivity';
+import { AuthContext } from '../context/AuthContext';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerStack = () => {
+  const { logout } = useContext(AuthContext);
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -26,6 +29,16 @@ const DrawerStack = () => {
       <Drawer.Screen name="Moje trasy" component={MyTrips} />
       {/* <Drawer.Screen name="Moje osiągnięcia" component={MyAchievements} />} */}
       <Drawer.Screen name="Nowa aktywność" component={MyActivity} />
+      <Drawer.Screen
+        name="Wyloguj"
+        component={Home}
+        listeners={{
+          drawerItemPress: e => {
+            e.preventDefault();
+            logout();
+          },
+        }}
+      />
     </Drawer.Navigator>
   );
 };
