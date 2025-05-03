@@ -120,6 +120,10 @@ export const AuthProvider = ({ children }) => {
           password: password,
           name: name,
           last_name: last_name,
+          weight: null,
+          height: null,
+          age: null,
+          gender: null,
         },
         {
           headers: {

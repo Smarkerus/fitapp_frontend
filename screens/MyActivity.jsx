@@ -107,8 +107,8 @@ const MyActivity = () => {
     setSessionId(newSessionId);
     setIsActive(true);
     setStartTime(Date.now());
-    await startTracking(newSessionId, activityType);
     console.log('Start: aktywności ', activityType, 'wartość z API: ', activityTypes[activityType]);
+    await startTracking(newSessionId, activityType);
   };
   const handleEndActivity = async () => {
     if (gpsPoints.length > 0) {

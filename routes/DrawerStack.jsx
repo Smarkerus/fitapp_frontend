@@ -25,7 +25,7 @@ const DrawerStack = () => {
         drawerType: 'slide',
       }}
     >
-      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Ekran Główny" component={Home} />
       <Drawer.Screen name="Moje trasy" component={MyTrips} />
       {/* <Drawer.Screen name="Moje osiągnięcia" component={MyAchievements} />} */}
       <Drawer.Screen name="Nowa aktywność" component={MyActivity} />

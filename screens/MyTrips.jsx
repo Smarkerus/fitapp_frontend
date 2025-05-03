@@ -105,7 +105,7 @@ export default function MyTrips() {
             <Text style={globalStyles.listItemText}>Czas: {(item.summary.duration / 3600).toFixed(2)} h</Text>
             <Text style={globalStyles.listItemText}>Średnia prędkość: {computeAverageSpeed(item).toFixed(2)} km/h</Text>
             <Text style={globalStyles.listItemText}>
-              Liczba spalonych kalorii: {Number(item.summary.calories_burned).toFixed(0)} kCal
+              Liczba spalonych kalorii: {Number(item.summary.calories_burned).toFixed(0)} kcal
             </Text>
             <View style={{ height: 200, marginTop: 16 }}>
               <MapView
