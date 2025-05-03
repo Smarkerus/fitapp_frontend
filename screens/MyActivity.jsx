@@ -17,16 +17,6 @@ const MyActivity = () => {
   const [startTime, setStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  const mappedActivityTypes = [
-    { label: 'Bieganie', value: 'RUNNING', icon: 'directions-run' },
-    { label: 'Jazda na rowerze', value: 'CYCLING', icon: 'directions-bike' },
-    { label: 'Chodzenie', value: 'WALKING', icon: 'directions-walk' },
-    { label: 'Wspinaczka', value: 'CLIMBING', icon: 'terrain' },
-    { label: 'Nurkowanie', value: 'DIVING', icon: 'pool' },
-    { label: 'Pływanie', value: 'SWIMMING', icon: 'pool' },
-    { label: 'Inne', value: 'OTHER', icon: 'more-horiz' },
-  ];
-
   const generateSessionId = () => {
     const timestamp = Number(Date.now());
     return `${timestamp}_${user.id}`;
@@ -90,7 +80,7 @@ const MyActivity = () => {
           latitude: location.coords.latitude + randomOffset(),
           longitude: location.coords.longitude + randomOffset(),
           acceleration: 0,
-          activity: activityTypes[activityType],
+          activity: activityTypes[activityType].apiValue,
           last_entry: false,
         };
         setGpsPoints(prev => [...prev, point]);
@@ -107,7 +97,7 @@ const MyActivity = () => {
     setSessionId(newSessionId);
     setIsActive(true);
     setStartTime(Date.now());
-    console.log('Start: aktywności ', activityType, 'wartość z API: ', activityTypes[activityType]);
+    console.log('Start: aktywności ', activityType, 'wartość z API: ', activityTypes[activityType].apiValue);
     await startTracking(newSessionId, activityType);
   };
   const handleEndActivity = async () => {
@@ -127,7 +117,7 @@ const MyActivity = () => {
           latitude: location.coords.latitude + randomOffset(),
           longitude: location.coords.longitude + randomOffset(),
           acceleration: 0,
-          activity: activityTypes[selectedActivity],
+          activity: activityTypes[selectedActivity].apiValue,
           last_entry: true,
         };
         await saveGpsPoint(point);
@@ -168,8 +158,8 @@ const MyActivity = () => {
   };
 
   const getActivityIcon = activityValue => {
-    const activity = mappedActivityTypes.find(a => a.value === activityValue);
-    return activity ? activity.icon : 'more-horiz';
+    const activityIcon = activityTypes[activityValue].icon;
+    return activityIcon ? activityIcon : 'more-horiz';
   };
 
   return (
@@ -178,14 +168,14 @@ const MyActivity = () => {
         {!isActive && <Text style={globalStyles.title}>Rozpocznij nową aktywność</Text>}
         {!isActive ? (
           <View style={styles.activityList}>
-            {mappedActivityTypes.map(activity => (
+            {Object.keys(activityTypes).map(key => (
               <TouchableOpacity
-                key={activity.value}
+                key={key}
                 style={[globalStyles.button, styles.activityButton]}
-                onPress={() => handleStartActivity(activity.value)}
+                onPress={() => handleStartActivity(key)}
               >
-                <Icon name={activity.icon} size={24} color={globalStyles.colors.white} style={styles.icon} />
-                <Text style={globalStyles.buttonText}>{activity.label}</Text>
+                <Icon name={activityTypes[key].icon} size={24} color={globalStyles.colors.white} style={styles.icon} />
+                <Text style={globalStyles.buttonText}>{activityTypes[key].label}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity onPress={resetGpsPointsStorage} style={globalStyles.button}>
@@ -196,9 +186,7 @@ const MyActivity = () => {
           <View style={globalStyles.centeredContainer}>
             <View style={styles.activeActivityContainer}>
               <Icon name={getActivityIcon(selectedActivity)} size={48} color={globalStyles.colors.primary} />
-              <Text style={globalStyles.subtitle}>
-                {mappedActivityTypes.find(a => a.value === selectedActivity)?.label}
-              </Text>
+              <Text style={styles.subtitle}>{activityTypes[selectedActivity]?.label}</Text>
               <Text style={styles.timer}>{formatTime(elapsedTime)}</Text>
             </View>
             <TouchableOpacity style={[globalStyles.button, styles.stopButton]} onPress={handleEndActivity}>

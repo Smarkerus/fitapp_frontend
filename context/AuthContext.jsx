@@ -14,14 +14,33 @@ export const AuthProvider = ({ children }) => {
   const [activityTypes, setActivityTypes] = useState({});
   const [activityTypesLoaded, setActivityTypesLoaded] = useState(false);
 
+  const mappedActivityTypes = {
+    RUNNING: { label: 'Bieganie', value: 'RUNNING', icon: 'directions-run' },
+    CYCLING: { label: 'Jazda na rowerze', value: 'CYCLING', icon: 'directions-bike' },
+    WALKING: { label: 'Chodzenie', value: 'WALKING', icon: 'directions-walk' },
+    CLIMBING: { label: 'Wspinaczka', value: 'CLIMBING', icon: 'terrain' },
+    DIVING: { label: 'Nurkowanie', value: 'DIVING', icon: 'pool' },
+    SWIMMING: { label: 'Pływanie', value: 'SWIMMING', icon: 'pool' },
+    OTHER: { label: 'Inne', value: 'OTHER', icon: 'more-horiz' },
+  };
+
   const loadActivityTypes = async () => {
     try {
       const types = await fetchActibityTypes();
       setActivityTypes(types);
       setActivityTypesLoaded(true);
-      console.log('Pobrano typy aktywności: ', types);
+
+      const updatedMappedActivityTypes = {};
+      for (const key in mappedActivityTypes) {
+        updatedMappedActivityTypes[key] = {
+          ...mappedActivityTypes[key],
+          apiValue: types[key],
+        };
+      }
+      setActivityTypes(updatedMappedActivityTypes);
+      console.log('Zaktualizowane typy aktywności: ', updatedMappedActivityTypes);
     } catch (error) {
-      console.error('Failed to load activity types:', error);
+      console.error('Nie udało się pobrać typów aktywności:', error);
     }
   };
 
@@ -95,16 +114,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    setUser(null);
+    if (Platform.OS === 'web') {
+      await AsyncStorage.removeItem('userToken');
+    } else {
+      await SecureStore.deleteItemAsync('userToken');
+    }
     try {
       const response = await axios.post(`${BACKEND_URL}users/logout`);
-      if (response.status === 200) {
-        if (Platform.OS === 'web') {
-          await AsyncStorage.removeItem('userToken');
-        } else {
-          await SecureStore.deleteItemAsync('userToken');
-        }
-        setUser(null);
-      }
+      console.log('Użytkownik wylogowany pomyślnie.');
     } catch (error) {
       console.error('Bład wylogowywania:', error);
       throw error;
@@ -134,6 +152,34 @@ export const AuthProvider = ({ children }) => {
       );
     } catch (error) {
       console.error('Bład rejestracji użytkownika:', error);
+      throw error;
+    }
+  };
+
+  const fetchUserStatistics = async (start_time, end_time) => {
+    try {
+      console.log('Pobieranie statystyk użytkownika...', {
+        user_id: user.id,
+        start_time: start_time,
+        end_time: end_time,
+      });
+      const response = await axios.post(
+        `${BACKEND_URL}statistics/statistics`,
+        {
+          user_id: user.id,
+          start_time: start_time,
+          end_time: end_time,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log('Pobrano statystyki użytkownika: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Błąd pobierania statystyk użytkownika:', error);
       throw error;
     }
   };
@@ -210,7 +256,17 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ activityTypes, user, login, logout, register, loadUser, fetchUserTrips, uploadGpsPoints }}
+      value={{
+        activityTypes,
+        user,
+        login,
+        logout,
+        register,
+        loadUser,
+        fetchUserTrips,
+        fetchUserStatistics,
+        uploadGpsPoints,
+      }}
     >
       {children}
     </AuthContext.Provider>
