@@ -3,10 +3,10 @@ import { Image } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/Home';
 import MyTrips from '../screens/MyTrips';
-// import MyAchievements from '../screens/MyAchievements';
 import MyActivity from '../screens/MyActivity';
 import Account from '../screens/Account';
 import { AuthContext } from '../context/AuthContext';
+import Reminder from '../screens/Reminder';
 
 const Drawer = createDrawerNavigator();
 
@@ -28,9 +28,9 @@ const DrawerStack = () => {
     >
       <Drawer.Screen name="Ekran Główny" component={Home} />
       <Drawer.Screen name="Moje trasy" component={MyTrips} />
-      {/* <Drawer.Screen name="Moje osiągnięcia" component={MyAchievements} />} */}
       <Drawer.Screen name="Nowa aktywność" component={MyActivity} />
       <Drawer.Screen name="Moje konto" component={Account} />
+      <Drawer.Screen name="Przypominajka" component={Reminder} />
       <Drawer.Screen
         name="Wyloguj"
         component={Home}

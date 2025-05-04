@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, use } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [activityTypes, setActivityTypes] = useState({});
   const [activityTypesLoaded, setActivityTypesLoaded] = useState(false);
+  const [reminder, setReminder] = useState(null);
 
   const mappedActivityTypes = {
     RUNNING: { label: 'Bieganie', value: 'RUNNING', icon: 'directions-run' },
@@ -281,11 +282,92 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchReminder = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}reminders/reminders/`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Pobrano przypominajkę: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Błąd pobierania przypomninajki:', error);
+      throw error;
+    }
+  };
+
+  const createReminder = async (min_calories, min_distance, min_time) => {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}reminders/reminders/`,
+        {
+          id: user.id,
+          user_id: user.id,
+          min_calories: min_calories,
+          min_distance: min_distance,
+          min_time: min_time,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log('Utworzono przypominajkę: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Błąd tworzenia przypominajki:', error);
+      throw error;
+    }
+  };
+
+  const editReminder = async (min_calories, min_distance, min_time) => {
+    try {
+      const response = await axios.put(
+        `${BACKEND_URL}reminders/reminders/`,
+        {
+          id: user.id,
+          user_id: user.id,
+          min_calories: min_calories,
+          min_distance: min_distance,
+          min_time: min_time,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log('Zaktualizowano przypominajkę: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Błąd aktualizacji przypominajki:', error);
+      throw error;
+    }
+  };
+
+  const deleteReminder = async () => {
+    try {
+      const response = await axios.delete(`${BACKEND_URL}reminders/reminders/`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Usunięto przypominajkę: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Błąd usuwania przypominajki:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         activityTypes,
         user,
+        reminder,
         login,
         logout,
         register,
@@ -293,6 +375,10 @@ export const AuthProvider = ({ children }) => {
         loadUser,
         fetchUserTrips,
         fetchUserStatistics,
+        fetchReminder,
+        createReminder,
+        editReminder,
+        deleteReminder,
         uploadGpsPoints,
       }}
     >
