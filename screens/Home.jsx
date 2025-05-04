@@ -115,33 +115,49 @@ export default function Home({ navigation }) {
                       <Text style={styles.statValue}>{getActivityTypeName(statistics.most_liked_activity)}</Text>
                     </View>
                   )}
-
-                  <Text style={styles.sectionTitle}>Twoje aktywności</Text>
-                  {statistics.activities.length === 0 ? (
-                    <View style={globalStyles.centeredContainer}>
-                      <Text style={globalStyles.subtitle}>
-                        Hej, nie masz jeszcze żadnych aktywności w tym okresie! Może czas się poruszać?
-                      </Text>
-                      <TouchableOpacity
-                        style={globalStyles.button}
-                        onPress={() => navigation.navigate('Nowa aktywność')}
-                      >
-                        <Text style={globalStyles.buttonText}>Przejdź do aktywności</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ) : (
-                    statistics.activities.map((activity, index) => (
-                      <View key={index} style={styles.activityCard}>
-                        <Text style={styles.activityTitle}>{getActivityTypeName(activity.activity)}</Text>
-                        <Text>Liczba wystąpień: {activity.count}</Text>
-                        <Text>Dystans: {(activity.distance / 1000).toFixed(2)} km</Text>
-                        <Text>Czas: {formatTime(activity.time)}</Text>
-                        <Text>Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal</Text>
-                      </View>
-                    ))
-                  )}
                 </View>
               </ScrollView>
+            )
+          )}
+        </View>
+      </View>
+
+      <View style={globalStyles.container}>
+        <View style={styles.statsCard}>
+          {isLoading ? (
+            <ActivityIndicator size="large" color={globalStyles.colors.primary} />
+          ) : (
+            statistics && (
+              <>
+                <Text style={styles.sectionTitle}>Twój ranking aktywności</Text>
+                <ScrollView style={styles.statsScroll}>
+                  <View style={styles.statsContainer}>
+                    {statistics.activities.length === 0 ? (
+                      <View style={globalStyles.centeredContainer}>
+                        <Text style={globalStyles.subtitle}>
+                          Hej, nie masz jeszcze żadnych aktywności w tym okresie! Może czas się poruszać?
+                        </Text>
+                        <TouchableOpacity
+                          style={globalStyles.button}
+                          onPress={() => navigation.navigate('Nowa aktywność')}
+                        >
+                          <Text style={globalStyles.buttonText}>Przejdź do aktywności</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      statistics.activities.map((activity, index) => (
+                        <View key={index} style={styles.activityCard}>
+                          <Text style={styles.activityTitle}>{getActivityTypeName(activity.activity)}</Text>
+                          <Text>Liczba wystąpień: {activity.count}</Text>
+                          <Text>Dystans: {(activity.distance / 1000).toFixed(2)} km</Text>
+                          <Text>Czas: {formatTime(activity.time)}</Text>
+                          <Text>Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal</Text>
+                        </View>
+                      ))
+                    )}
+                  </View>
+                </ScrollView>
+              </>
             )
           )}
         </View>
