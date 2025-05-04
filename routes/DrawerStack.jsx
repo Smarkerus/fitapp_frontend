@@ -5,6 +5,7 @@ import Home from '../screens/Home';
 import MyTrips from '../screens/MyTrips';
 // import MyAchievements from '../screens/MyAchievements';
 import MyActivity from '../screens/MyActivity';
+import Account from '../screens/Account';
 import { AuthContext } from '../context/AuthContext';
 
 const Drawer = createDrawerNavigator();
@@ -29,6 +30,7 @@ const DrawerStack = () => {
       <Drawer.Screen name="Moje trasy" component={MyTrips} />
       {/* <Drawer.Screen name="Moje osiągnięcia" component={MyAchievements} />} */}
       <Drawer.Screen name="Nowa aktywność" component={MyActivity} />
+      <Drawer.Screen name="Moje konto" component={Account} />
       <Drawer.Screen
         name="Wyloguj"
         component={Home}

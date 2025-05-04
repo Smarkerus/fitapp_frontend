@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       try {
         let userData = await fetchUserData(token);
         setUser({ token: token, ...userData });
-        console.log('Udało się wczytać token:', token, userData, user);
+        console.log('Udało się wczytać token:', token, user);
       } catch (error) {
         await logout();
       }
@@ -152,6 +152,33 @@ export const AuthProvider = ({ children }) => {
       );
     } catch (error) {
       console.error('Bład rejestracji użytkownika:', error);
+      throw error;
+    }
+  };
+
+  const editUserDetails = async (weight, height, age, gender) => {
+    try {
+      const response = await axios.put(
+        `${BACKEND_URL}users/me/details`,
+        {
+          id: user.id,
+          user_id: user.id,
+          weight: weight,
+          height: height,
+          age: age,
+          gender: gender,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      console.log('Dane użytkownika zaktualizowane pomyślnie:', response.data);
+      await loadUser();
+      return response.data;
+    } catch (error) {
+      console.error('Bład edytowania danych użytkownika:', error);
       throw error;
     }
   };
@@ -262,6 +289,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         register,
+        editUserDetails,
         loadUser,
         fetchUserTrips,
         fetchUserStatistics,
