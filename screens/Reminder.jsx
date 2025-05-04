@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/AuthContext';
 import { globalStyles } from '../styles';
+import { StyleSheet } from 'react-native';
 
 export default function Reminder({ navigation }) {
   const { user, fetchReminder, createReminder, editReminder, deleteReminder } = useContext(AuthContext);
@@ -154,21 +155,28 @@ export default function Reminder({ navigation }) {
   const renderReminder = () => (
     <View>
       <Text style={globalStyles.title}>Twoja przypominajka</Text>
-      <Text style={globalStyles.text}>Minimalna liczba kalorii: {reminderData.min_calories}</Text>
-      <Text style={globalStyles.text}>Minimalny dystans: {reminderData.min_distance / 1000} km</Text>
-      <Text style={globalStyles.text}>Minimalny czas: {reminderData.min_time / 60} minut</Text>
-      <TouchableOpacity style={globalStyles.button} onPress={() => setIsEditing(true)}>
-        <Text style={globalStyles.buttonText}>Edytuj</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={globalStyles.secondaryButton} onPress={handleDelete}>
-        <Text style={globalStyles.buttonText}>Usuń</Text>
-      </TouchableOpacity>
+      <Text style={styles.infoText}>
+        Zawsze możesz zaktualizować swoją przypominajkę, aby osiągać jeszcze lepsze rezultaty treningu!
+      </Text>
+      <View style={globalStyles.card}>
+        <Text style={globalStyles.text}>Minimalna liczba kalorii: {reminderData.min_calories}</Text>
+        <Text style={globalStyles.text}>Minimalny dystans: {reminderData.min_distance / 1000} km</Text>
+        <Text style={globalStyles.text}>Minimalny czas: {reminderData.min_time / 60} minut</Text>
+        <TouchableOpacity style={globalStyles.button} onPress={() => setIsEditing(true)}>
+          <Text style={globalStyles.buttonText}>Edytuj</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={globalStyles.secondaryButton} onPress={handleDelete}>
+          <Text style={globalStyles.buttonText}>Usuń</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
   const renderNoReminder = () => (
     <View>
-      <Text style={globalStyles.title}>Nie masz jeszcze ustawionej przypominajki.</Text>
+      <Text style={globalStyles.title}>
+        Nie masz jeszcze ustawionej przypominajki. Ustaw ją, by już zawsze pamiętać o swoim treningu!
+      </Text>
       <TouchableOpacity style={globalStyles.button} onPress={() => setIsEditing(true)}>
         <Text style={globalStyles.buttonText}>Utwórz przypominajkę</Text>
       </TouchableOpacity>
@@ -183,3 +191,11 @@ export default function Reminder({ navigation }) {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  infoText: {
+    fontSize: globalStyles.sizes.medium,
+    color: globalStyles.colors.darkGray,
+    marginBottom: globalStyles.spacing.medium,
+    textAlign: 'center',
+  },
+});

@@ -51,102 +51,104 @@ export default function Account({ navigation }) {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Text style={globalStyles.title}>Profil użytkownika</Text>
-      <Text style={styles.infoText}>
-        Tutaj możesz zaktualizować swoje dane – dzięki nim dostosujemy Twój plan, byś zawsze był w szczytowej formie i
-        osiągał swoje cele!
-      </Text>
-      <View style={globalStyles.card}>
-        <Text style={globalStyles.text}>Imię: {user?.name || 'Brak informacji'}</Text>
-        <Text style={globalStyles.text}>Nazwisko: {user?.last_name || 'Brak informacji'}</Text>
-        <Text style={globalStyles.text}>Email: {user?.email || 'Brak informacji'}</Text>
-        <View style={styles.separator} />
-        {isEditing ? (
-          <>
-            <Text style={globalStyles.subtitle}>Edytuj dane:</Text>
-            <Text style={globalStyles.text}>Wiek:</Text>
-            <TextInput
-              style={globalStyles.input}
-              value={age}
-              onChangeText={setAge}
-              keyboardType="numeric"
-              placeholder="Wiek"
-            />
-            <Text style={globalStyles.text}>Waga:</Text>
-            <TextInput
-              style={globalStyles.input}
-              value={weight}
-              onChangeText={setWeight}
-              keyboardType="numeric"
-              placeholder="Waga (kg)"
-            />
-            <Text style={globalStyles.text}>Wzrost:</Text>
-            <TextInput
-              style={globalStyles.input}
-              value={height}
-              onChangeText={setHeight}
-              keyboardType="numeric"
-              placeholder="Wzrost (cm)"
-            />
-            <Text style={globalStyles.text}>Płeć:</Text>
-            <View style={styles.checkboxContainer}>
-              <View style={styles.checkboxItem}>
-                <Checkbox
-                  value={isMale}
-                  onValueChange={newValue => {
-                    setIsMale(newValue);
-                    setIsFemale(!newValue);
-                  }}
-                  color={isMale ? globalStyles.colors.primary : undefined}
-                />
-                <Text style={styles.checkboxLabel}>Mężczyzna</Text>
+    <View style={globalStyles.background}>
+      <View style={globalStyles.container}>
+        <Text style={globalStyles.title}>Profil użytkownika</Text>
+        <Text style={styles.infoText}>
+          Tutaj możesz zaktualizować swoje dane – dzięki nim dostosujemy Twój plan, byś zawsze był w szczytowej formie i
+          osiągał swoje cele!
+        </Text>
+        <View style={globalStyles.card}>
+          <Text style={globalStyles.text}>Imię: {user?.name || 'Brak informacji'}</Text>
+          <Text style={globalStyles.text}>Nazwisko: {user?.last_name || 'Brak informacji'}</Text>
+          <Text style={globalStyles.text}>Email: {user?.email || 'Brak informacji'}</Text>
+          <View style={styles.separator} />
+          {isEditing ? (
+            <>
+              <Text style={globalStyles.subtitle}>Edytuj dane:</Text>
+              <Text style={globalStyles.text}>Wiek:</Text>
+              <TextInput
+                style={globalStyles.input}
+                value={age}
+                onChangeText={setAge}
+                keyboardType="numeric"
+                placeholder="Wiek"
+              />
+              <Text style={globalStyles.text}>Waga:</Text>
+              <TextInput
+                style={globalStyles.input}
+                value={weight}
+                onChangeText={setWeight}
+                keyboardType="numeric"
+                placeholder="Waga (kg)"
+              />
+              <Text style={globalStyles.text}>Wzrost:</Text>
+              <TextInput
+                style={globalStyles.input}
+                value={height}
+                onChangeText={setHeight}
+                keyboardType="numeric"
+                placeholder="Wzrost (cm)"
+              />
+              <Text style={globalStyles.text}>Płeć:</Text>
+              <View style={styles.checkboxContainer}>
+                <View style={styles.checkboxItem}>
+                  <Checkbox
+                    value={isMale}
+                    onValueChange={newValue => {
+                      setIsMale(newValue);
+                      setIsFemale(!newValue);
+                    }}
+                    color={isMale ? globalStyles.colors.primary : undefined}
+                  />
+                  <Text style={styles.checkboxLabel}>Mężczyzna</Text>
+                </View>
+                <View style={styles.checkboxItem}>
+                  <Checkbox
+                    value={isFemale}
+                    onValueChange={newValue => {
+                      setIsFemale(newValue);
+                      setIsMale(!newValue);
+                    }}
+                    color={isFemale ? globalStyles.colors.primary : undefined}
+                  />
+                  <Text style={styles.checkboxLabel}>Kobieta</Text>
+                </View>
               </View>
-              <View style={styles.checkboxItem}>
-                <Checkbox
-                  value={isFemale}
-                  onValueChange={newValue => {
-                    setIsFemale(newValue);
-                    setIsMale(!newValue);
-                  }}
-                  color={isFemale ? globalStyles.colors.primary : undefined}
-                />
-                <Text style={styles.checkboxLabel}>Kobieta</Text>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity style={globalStyles.button} onPress={handleSave}>
+                  <Text style={globalStyles.buttonText}>Zapisz</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={globalStyles.outlineButton} onPress={handleCancel}>
+                  <Text style={globalStyles.outlineButtonText}>Anuluj</Text>
+                </TouchableOpacity>
               </View>
-            </View>
-            <View style={styles.actionButtons}>
-              <TouchableOpacity style={globalStyles.button} onPress={handleSave}>
-                <Text style={globalStyles.buttonText}>Zapisz</Text>
+            </>
+          ) : (
+            <>
+              <Text style={globalStyles.text}>
+                Wiek: {user?.details?.age ? `${user?.details?.age} lat` : 'Brak informacji'}
+              </Text>
+              <Text style={globalStyles.text}>
+                Waga: {user?.details?.weight ? `${user?.details?.weight} kg` : 'Brak informacji'}
+              </Text>
+              <Text style={globalStyles.text}>
+                Wzrost: {user?.details?.height ? `${user?.details?.height} cm` : 'Brak informacji'}
+              </Text>
+              <Text style={globalStyles.text}>
+                Płeć:{' '}
+                {user?.details?.gender === 'male'
+                  ? 'Mężczyzna'
+                  : user?.details?.gender === 'female'
+                    ? 'Kobieta'
+                    : 'Brak informacji'}
+              </Text>
+              <TouchableOpacity style={globalStyles.button} onPress={() => setIsEditing(true)}>
+                <Text style={globalStyles.buttonText}>Edytuj dane</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={globalStyles.outlineButton} onPress={handleCancel}>
-                <Text style={globalStyles.outlineButtonText}>Anuluj</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.text}>
-              Wiek: {user?.details?.age ? `${user?.details?.age} lat` : 'Brak informacji'}
-            </Text>
-            <Text style={globalStyles.text}>
-              Waga: {user?.details?.weight ? `${user?.details?.weight} kg` : 'Brak informacji'}
-            </Text>
-            <Text style={globalStyles.text}>
-              Wzrost: {user?.details?.height ? `${user?.details?.height} cm` : 'Brak informacji'}
-            </Text>
-            <Text style={globalStyles.text}>
-              Płeć:{' '}
-              {user?.details?.gender === 'male'
-                ? 'Mężczyzna'
-                : user?.details?.gender === 'female'
-                  ? 'Kobieta'
-                  : 'Brak informacji'}
-            </Text>
-            <TouchableOpacity style={globalStyles.button} onPress={() => setIsEditing(true)}>
-              <Text style={globalStyles.buttonText}>Edytuj dane</Text>
-            </TouchableOpacity>
-          </>
-        )}
+            </>
+          )}
+        </View>
       </View>
     </View>
   );
