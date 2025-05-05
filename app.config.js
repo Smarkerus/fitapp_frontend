@@ -35,6 +35,6 @@ export default {
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: ['expo-font', 'expo-secure-store'],
+    plugins: ['expo-font', 'expo-secure-store', 'expo-notifications'],
   },
 };
