@@ -23,7 +23,6 @@ function AppNavigator() {
   }
 
   return user ? <DrawerStack /> : <AuthStack />;
-  // return <SafeAreaView>{user ? <DrawerStack /> : <AuthStack />}</SafeAreaView>;
 }
 
 export default AppNavigator;
