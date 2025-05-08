@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import AuthStack from './AuthStack';
 import DrawerStack from './DrawerStack';
 import * as SplashScreen from 'expo-splash-screen';
+import { SafeAreaView } from 'react-native';
 
 function AppNavigator() {
   const { user, loadUser } = useContext(AuthContext);
@@ -22,6 +23,7 @@ function AppNavigator() {
   }
 
   return user ? <DrawerStack /> : <AuthStack />;
+  // return <SafeAreaView>{user ? <DrawerStack /> : <AuthStack />}</SafeAreaView>;
 }
 
 export default AppNavigator;

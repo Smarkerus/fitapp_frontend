@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Image } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/Home';
 import MyTrips from '../screens/MyTrips';

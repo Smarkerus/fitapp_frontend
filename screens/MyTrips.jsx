@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { globalStyles } from '../styles';
-import React, { useContext, useState, useCallback, useRef } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import MapView, { PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';

@@ -3,17 +3,20 @@ import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Platform } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 export const AuthContext = createContext();
 
 // TODO: Zmienić na adres backendu w chmurze, na razie localhost
-const BACKEND_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8000/' : 'http://localhost:8000/';
+// const BACKEND_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8000/' : 'http://localhost:8000/';
+const BACKEND_URL = Platform.OS === 'android' ? 'http://192.168.10.212:8000/' : 'http://localhost:8000/';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [activityTypes, setActivityTypes] = useState({});
   const [activityTypesLoaded, setActivityTypesLoaded] = useState(false);
   const [reminder, setReminder] = useState(null);
+  const [fcmToken, setFcmToken] = useState(null);
 
   const mappedActivityTypes = {
     RUNNING: { label: 'Bieganie', value: 'RUNNING', icon: 'directions-run' },
@@ -25,9 +28,44 @@ export const AuthProvider = ({ children }) => {
     OTHER: { label: 'Inne', value: 'OTHER', icon: 'more-horiz' },
   };
 
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  const getToken = async () => {
+    const token = await messaging().getToken();
+    console.log('FCM Token:', token);
+    if (Platform.OS === 'android') {
+      await messaging().setAutoInitEnabled(true);
+    }
+    if (Platform.OS === 'ios') {
+      await messaging().setAutoInitEnabled(true);
+    }
+    return token;
+  };
+
+  const ensureFcmToken = async () => {
+    await requestUserPermission();
+    const token = await getToken();
+    setFcmToken(token);
+  };
+
+  useEffect(() => {
+    if (fcmToken) {
+      uploadFcmToken();
+    }
+  }, [fcmToken]);
+
   const loadActivityTypes = async () => {
     try {
-      const types = await fetchActibityTypes();
+      const types = await fetchActivityTypes();
       setActivityTypes(types);
       setActivityTypesLoaded(true);
 
@@ -62,6 +100,7 @@ export const AuthProvider = ({ children }) => {
       try {
         let userData = await fetchUserData(token);
         setUser({ token: token, ...userData });
+        await ensureFcmToken();
         console.log('Udało się wczytać token:', token, user);
       } catch (error) {
         await logout();
@@ -108,6 +147,9 @@ export const AuthProvider = ({ children }) => {
 
       const userData = await fetchUserData(access_token);
       setUser({ token: access_token, ...userData });
+      if (Platform.OS !== 'web') {
+        await ensureFcmToken();
+      }
     } catch (error) {
       console.error('Bład logowania:', error);
       throw error;
@@ -267,7 +309,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const fetchActibityTypes = async () => {
+  const fetchActivityTypes = async () => {
     try {
       const response = await axios.get(`${BACKEND_URL}trips/activity_types/`, {
         headers: {
@@ -290,6 +332,7 @@ export const AuthProvider = ({ children }) => {
         },
       });
       console.log('Pobrano przypominajkę: ', response.data);
+      setReminder(response.data);
       return response.data;
     } catch (error) {
       console.error('Błąd pobierania przypomninajki:', error);
@@ -315,6 +358,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
       console.log('Utworzono przypominajkę: ', response.data);
+      setReminder(response.data);
       return response.data;
     } catch (error) {
       console.error('Błąd tworzenia przypominajki:', error);
@@ -340,6 +384,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
       console.log('Zaktualizowano przypominajkę: ', response.data);
+      setReminder(response.data);
       return response.data;
     } catch (error) {
       console.error('Błąd aktualizacji przypominajki:', error);
@@ -358,6 +403,35 @@ export const AuthProvider = ({ children }) => {
       return response.data;
     } catch (error) {
       console.error('Błąd usuwania przypominajki:', error);
+      throw error;
+    }
+  };
+
+  const uploadFcmToken = async () => {
+    if (!fcmToken || typeof fcmToken !== 'string' || fcmToken.trim() === '') {
+      throw new Error('Nieprawidłowy token FCM');
+    }
+
+    try {
+      console.log('Wysyłanie tokena powiadomień:', fcmToken, typeof fcmToken, fcmToken.length);
+      const response = await axios.post(
+        `${BACKEND_URL}users/fcm-push-token?fcm_push_token=${encodeURIComponent(fcmToken)}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log('Zaktualizowano token powiadomień:', fcmToken, response.data);
+    } catch (error) {
+      console.error(
+        'Błąd aktualizacji tokena powiadomień:',
+        error.response?.status,
+        error.response?.data,
+        error.message
+      );
       throw error;
     }
   };
