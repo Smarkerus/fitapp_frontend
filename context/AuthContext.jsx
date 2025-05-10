@@ -7,9 +7,8 @@ import messaging from '@react-native-firebase/messaging';
 
 export const AuthContext = createContext();
 
-// TODO: Zmienić na adres backendu w chmurze, na razie localhost
-// const BACKEND_URL = Platform.OS === 'android' ? 'http://10.0.2.2:8000/' : 'http://localhost:8000/';
-const BACKEND_URL = Platform.OS === 'android' ? 'http://192.168.10.212:8000/' : 'http://localhost:8000/';
+// TODO: Zmienić na adres backendu w chmurze, na razie localhost lub IP komputera
+const BACKEND_URL = Platform.OS === 'android' ? 'http://192.168.50.196:8000/' : 'http://localhost:8000/';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -35,7 +34,7 @@ export const AuthProvider = ({ children }) => {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      console.log('Status Autoryzacji:', authStatus);
     }
   }
 

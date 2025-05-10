@@ -20,7 +20,16 @@ export default {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       },
     },
+    extra: {
+      eas: {
+        projectId: 'tutaj_podaj_swoj_project_id',
+      },
+    },
     android: {
+      package: 'tutaj_podaj_package_name',
+      permissions: ['INTERNET'],
+      enableProguardInReleaseBuilds: false,
+      googleServicesFile: './google-services.json',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#ffffff',
@@ -30,11 +39,22 @@ export default {
           apiKey: process.env.GOOGLE_MAPS_API_KEY,
         },
       },
-      package: 'com.anonymous.fitapp_frontend',
     },
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: ['expo-font', 'expo-secure-store', 'expo-notifications'],
+    plugins: [
+      'expo-secure-store',
+      'expo-font',
+      [
+        'expo-build-properties',
+        {
+          android: {
+            minifyEnabled: false,
+            enableProguardInReleaseBuilds: false,
+          },
+        },
+      ],
+    ],
   },
 };

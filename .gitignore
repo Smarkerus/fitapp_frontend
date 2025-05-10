@@ -48,3 +48,4 @@ android
 # Firebase config
 google-services.json
 eas.json
+*firebase*.json
