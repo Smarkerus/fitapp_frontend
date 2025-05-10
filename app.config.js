@@ -20,11 +20,6 @@ export default {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       },
     },
-    extra: {
-      eas: {
-        projectId: 'tutaj_podaj_swoj_project_id',
-      },
-    },
     android: {
       package: 'tutaj_podaj_package_name',
       permissions: ['INTERNET'],
