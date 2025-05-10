@@ -40,3 +40,11 @@ yarn-error.*
 .pnpm/
 pnpm-lock.yaml
 .pnpm-debug.log
+
+# Android
+.idea
+android
+
+# Firebase config
+google-services.json
+eas.json
