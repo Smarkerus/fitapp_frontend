@@ -23,6 +23,7 @@ const DrawerStack = () => {
         drawerActiveTintColor: '#007AFF',
         drawerInactiveTintColor: '#666',
         drawerType: 'slide',
+        drawerPosition: 'right',
       }}
     >
       <Drawer.Screen name="Ekran Główny" component={Home} />
