@@ -50,6 +50,12 @@
     Jeżeli wszystko się udało, powinieneś móc cieszyć się działającą aplikacją. Możesz to sprawdzić poprzez rejestrację nowego użytkownika na stronie głównej lub zalogowanie się!
 
 11. Opcjonalnie: zainstaluj JDK, Android SDK, upewnij się iż zmienne środowiskowe ANDROID_HOME i JAVA_HOME istnieją i wskazują na poprawne foldery, w których zainstalowane zostały te programy.
+    Na systemach windows zaleca się zainstalować JDK w wersji 17, przy użyciu polecenia:
+
+```bash
+choco install -y microsoft-openjdk17
+```
+
     Aplikację na Androida możesz zbudować i jednocześnie włączyć w wersji debug wykonując polecenia:
     ```bash
     npx expo prebuild --clean

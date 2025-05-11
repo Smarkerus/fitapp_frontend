@@ -21,7 +21,7 @@ export default {
       },
     },
     android: {
-      package: 'tutaj_podaj_package_name',
+      package: 'com.fitapp.frontend',
       permissions: ['INTERNET'],
       enableProguardInReleaseBuilds: false,
       googleServicesFile: './google-services.json',
