@@ -1,6 +1,6 @@
 ## Instalacja lokalna i uruchomienie projektu
 
-1. Upewnij się, że poprawnie pobrałeś, skonfigurowałeś i uruchomiłeś FitApp API: https://github.com/Smarkerus/fitapp_api (jeżeli chcesz udostępnić api w swojej sieci domowej, np. WiFi prawdopodobnie musisz odblokować połączenia przychodzące i wychodzące w swojej zaporze systemowej/firewall'u)
+1. Upewnij się, że poprawnie pobrałeś, skonfigurowałeś i uruchomiłeś FitApp API: https://github.com/Smarkerus/fitapp_backend (jeżeli chcesz udostępnić api w swojej sieci domowej, np. WiFi prawdopodobnie musisz odblokować połączenia przychodzące i wychodzące w swojej zaporze systemowej/firewall'u)
 2. Upewnij się, że masz w systemie zainstalowany pakiet Node.js wraz z Node Package Managerem (npm) oraz Node Package Execute (npx)
 3. Sklonuj repozytorium projektu:
 
