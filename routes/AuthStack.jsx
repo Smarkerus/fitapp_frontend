@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { lazy } from 'react';
 import Login from '../screens/Login';
-import Register from '../screens/Register';
+const Register = lazy(() => import('../screens/Register'));
 
 const Stack = createStackNavigator();
 

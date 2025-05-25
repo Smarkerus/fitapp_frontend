@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import { useContext, lazy } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/Home';
-import MyTrips from '../screens/MyTrips';
-import MyActivity from '../screens/MyActivity';
-import Account from '../screens/Account';
+const MyTrips = lazy(() => import('../screens/MyTrips'));
+const MyActivity = lazy(() => import('../screens/MyActivity'));
+const Account = lazy(() => import('../screens/Account'));
+const Reminder = lazy(() => import('../screens/Reminder'));
 import { AuthContext } from '../context/AuthContext';
-import Reminder from '../screens/Reminder';
 
 const Drawer = createDrawerNavigator();
 
