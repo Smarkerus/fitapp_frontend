@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+import { ApiContext } from '../context/ApiContext';
 import { globalStyles } from '../styles';
 
 export default function Home({ navigation }) {
-  const { user, fetchUserStatistics, activityTypes } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const { fetchUserStatistics, activityTypes } = useContext(ApiContext);
 
   const [selectedPeriod, setSelectedPeriod] = useState('all');
   const [statistics, setStatistics] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   const periods = [
     { label: 'Cały okres', value: 'all' },
@@ -18,7 +20,26 @@ export default function Home({ navigation }) {
     { label: 'Dzisiaj', value: 'today' },
   ];
 
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoadingStats(true);
+      const { start_date, end_date } = getDateRange(selectedPeriod);
+      try {
+        const stats = await fetchUserStatistics(start_date, end_date);
+        setStatistics(stats);
+      } catch (error) {
+        console.error('Błąd podczas pobierania statystyk:', error);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+    fetchStats();
+  }, [selectedPeriod, fetchUserStatistics]);
+
   const getActivityTypeName = activityValue => {
+    if (!activityTypes) {
+      return 'Ładowanie typów aktywności...';
+    }
     const activityType = Object.values(activityTypes).find(type => type.apiValue === activityValue);
     return activityType ? activityType.label : 'Nieznany typ aktywności';
   };
@@ -45,22 +66,6 @@ export default function Home({ navigation }) {
     return { start_date: start_date.toISOString(), end_date: end_date.toISOString() };
   };
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      setIsLoading(true);
-      const { start_date, end_date } = getDateRange(selectedPeriod);
-      try {
-        const stats = await fetchUserStatistics(start_date, end_date);
-        setStatistics(stats);
-      } catch (error) {
-        console.error('Błąd podczas pobierania statystyk:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchStats();
-  }, [selectedPeriod]);
-
   const formatTime = seconds => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -69,27 +74,26 @@ export default function Home({ navigation }) {
 
   return (
     <View style={globalStyles.background}>
-      <View style={globalStyles.container}>
-        <Text style={globalStyles.welcome}>Witaj, {user.name}!</Text>
-        <View style={styles.statsCard}>
-          <View style={styles.periodSelectors}>
-            {periods.map(period => (
-              <TouchableOpacity
-                key={period.value}
-                style={[styles.periodButton, period.value === selectedPeriod && styles.selectedPeriodButton]}
-                onPress={() => setSelectedPeriod(period.value)}
-              >
-                <Text style={[styles.periodText, period.value === selectedPeriod && styles.periodTextSelected]}>
-                  {period.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {isLoading ? (
-            <ActivityIndicator size="large" color={globalStyles.colors.primary} />
-          ) : (
-            statistics && (
+      {isLoadingStats ? (
+        <ActivityIndicator size="large" color={globalStyles.colors.primary} />
+      ) : (
+        <View style={globalStyles.container}>
+          <Text style={globalStyles.welcome}>Witaj, {user.name}!</Text>
+          <View style={styles.statsCard}>
+            <View style={styles.periodSelectors}>
+              {periods.map(period => (
+                <TouchableOpacity
+                  key={period.value}
+                  style={[styles.periodButton, period.value === selectedPeriod && styles.selectedPeriodButton]}
+                  onPress={() => setSelectedPeriod(period.value)}
+                >
+                  <Text style={[styles.periodText, period.value === selectedPeriod && styles.periodTextSelected]}>
+                    {period.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            {statistics && (
               <ScrollView style={styles.statsScroll}>
                 <View style={styles.statsContainer}>
                   <Text style={styles.sectionTitle}>Twoje statystyki</Text>
@@ -117,17 +121,11 @@ export default function Home({ navigation }) {
                   )}
                 </View>
               </ScrollView>
-            )
-          )}
-        </View>
-      </View>
+            )}
+          </View>
 
-      <View style={globalStyles.container}>
-        <View style={styles.statsCard}>
-          {isLoading ? (
-            <ActivityIndicator size="large" color={globalStyles.colors.primary} />
-          ) : (
-            statistics && (
+          <View style={styles.statsCard}>
+            {statistics && (
               <>
                 <Text style={styles.sectionTitle}>Twój ranking aktywności</Text>
                 <ScrollView style={styles.statsScroll}>
@@ -158,10 +156,10 @@ export default function Home({ navigation }) {
                   </View>
                 </ScrollView>
               </>
-            )
-          )}
+            )}
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }

@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { globalStyles } from '../styles';
 import React, { useContext, useState, useCallback } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { ApiContext } from '../context/ApiContext';
 import MapView, { PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,7 +9,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { FlatList } from 'react-native-gesture-handler';
 
 export default function MyTrips() {
-  const { fetchUserTrips } = useContext(AuthContext);
+  const { fetchUserTrips } = useContext(ApiContext);
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedTripId, setExpandedTripId] = useState(null);

@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/AuthContext';
+import { NotificationContext } from '../context/NotificationContext';
 import { globalStyles } from '../styles';
 
 export default function Reminder({ navigation }) {
-  const { user, fetchReminder, createReminder, editReminder, deleteReminder } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const { fetchReminder, createReminder, editReminder, deleteReminder } = useContext(NotificationContext);
   const [reminderData, setReminderData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState('');

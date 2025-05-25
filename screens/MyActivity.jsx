@@ -2,13 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { globalStyles } from '../styles';
 import { AuthContext } from '../context/AuthContext';
+import { ApiContext } from '../context/ApiContext';
+import { LocationContext } from '../context/LocationContext';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const MyActivity = () => {
-  const { user, uploadGpsPoints, activityTypes } = useContext(AuthContext);
+const MyActivity = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
+  const { activityTypes } = useContext(ApiContext);
+  const { uploadGpsPoints } = useContext(LocationContext);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const [sessionId, setSessionId] = useState('');
@@ -154,7 +158,9 @@ const MyActivity = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs
+      .toString()
+      .padStart(2, '0')}`;
   };
 
   const getActivityIcon = activityValue => {

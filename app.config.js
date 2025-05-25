@@ -9,6 +9,9 @@ export default {
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
     newArchEnabled: true,
+    extra: {
+      backendUrl: process.env.BACKEND_URL,
+    },
     splash: {
       image: './assets/splash-icon.png',
       resizeMode: 'contain',
