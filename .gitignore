@@ -49,3 +49,6 @@ android
 google-services.json
 eas.json
 *firebase*.json
+
+# Tests
+coverage/
