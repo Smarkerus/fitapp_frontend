@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { globalStyles } from '../styles';
 import Checkbox from 'expo-checkbox';
@@ -20,24 +20,24 @@ export default function Account({ navigation }) {
     const gender = isMale ? 'male' : 'female';
 
     if (isNaN(ageNum) || ageNum <= 0) {
-      alert('Wiek musi być dodatnią liczbą całkowitą.');
+      Alert.alert('Błąd', 'Wiek musi być dodatnią liczbą całkowitą.');
       return;
     }
     if (isNaN(weightNum) || weightNum <= 0) {
-      alert('Waga musi być dodatnią liczbą.');
+      Alert.alert('Błąd', 'Waga musi być dodatnią liczbą.');
       return;
     }
     if (isNaN(heightNum) || heightNum <= 0) {
-      alert('Wzrost musi być dodatnią liczbą.');
+      Alert.alert('Błąd', 'Wzrost musi być dodatnią liczbą.');
       return;
     }
 
     try {
       await editUserDetails(weightNum, heightNum, ageNum, gender);
-      alert('Dane zostały zapisane!');
+      Alert.alert('Sukces', 'Dane zostały zapisane!');
       setIsEditing(false);
     } catch (error) {
-      alert('Wystąpił błąd podczas zapisywania danych.');
+      Alert.alert('Błąd', 'Wystąpił błąd podczas zapisywania danych.');
     }
   };
 

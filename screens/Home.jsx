@@ -73,50 +73,58 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <View style={globalStyles.background}>
+    <View style={globalStyles.background} testID="home-screen">
       {isLoadingStats ? (
-        <ActivityIndicator size="large" color={globalStyles.colors.primary} />
+        <ActivityIndicator size="large" color={globalStyles.colors.primary} testID="loading-indicator" />
       ) : (
         <View style={globalStyles.container}>
-          <Text style={globalStyles.welcome}>Witaj, {user.name}!</Text>
-          <View style={styles.statsCard}>
+          <Text style={globalStyles.welcome} testID="welcome-message">
+            Witaj, {user.name}!
+          </Text>
+          <View style={styles.statsCard} testID="stats-card">
             <View style={styles.periodSelectors}>
               {periods.map(period => (
                 <TouchableOpacity
                   key={period.value}
                   style={[styles.periodButton, period.value === selectedPeriod && styles.selectedPeriodButton]}
                   onPress={() => setSelectedPeriod(period.value)}
+                  testID={`period-button-${period.value}`}
                 >
-                  <Text style={[styles.periodText, period.value === selectedPeriod && styles.periodTextSelected]}>
+                  <Text
+                    style={[styles.periodText, period.value === selectedPeriod && styles.periodTextSelected]}
+                    testID={`period-text-${period.value}`}
+                  >
                     {period.label}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
             {statistics && (
-              <ScrollView style={styles.statsScroll}>
-                <View style={styles.statsContainer}>
-                  <Text style={styles.sectionTitle}>Twoje statystyki</Text>
-                  <View style={styles.statRow}>
-                    <Text style={styles.statLabel}>Średnia prędkość:</Text>
-                    <Text style={styles.statValue}>{statistics.average_speed.toFixed(2)} km/h</Text>
+              <ScrollView style={styles.statsScroll} testID="stats-scroll">
+                <View style={styles.statsContainer} testID="stats-container">
+                  <Text style={styles.sectionTitle} testID="stats-title">
+                    Twoje statystyki
+                  </Text>
+                  <View style={styles.statRow} testID="stat-row-average-speed">
+                    <Text style={styles.statLabel} testID="stat-label-average-speed">Średnia prędkość:</Text>
+                    <Text style={styles.statValue} testID="stat-value-average-speed">{statistics.average_speed.toFixed(2)} km/h</Text>
                   </View>
-                  <View style={styles.statRow}>
-                    <Text style={styles.statLabel}>Całkowity dystans:</Text>
-                    <Text style={styles.statValue}>{(statistics.total_distance / 1000).toFixed(2)} km</Text>
+                  <View style={styles.statRow} testID="stat-row-total-distance">
+                    <Text style={styles.statLabel} testID="stat-label-total-distance">Całkowity dystans:</Text>
+                    <Text style={styles.statValue} testID="stat-value-total-distance">{(statistics.total_distance / 1000).toFixed(2)} km</Text>
                   </View>
-                  <View style={styles.statRow}>
-                    <Text style={styles.statLabel}>Całkowity czas:</Text>
-                    <Text style={styles.statValue}>{formatTime(statistics.total_time)}</Text>
+                  <View style={styles.statRow} testID="stat-row-total-time">
+                    <Text style={styles.statLabel} testID="stat-label-total-time">Całkowity czas:</Text>
+                    <Text style={styles.statValue} testID="stat-value-total-time">{formatTime(statistics.total_time)}</Text>
                   </View>
-                  <View style={styles.statRow}>
-                    <Text style={styles.statLabel}>Spalone kalorie:</Text>
-                    <Text style={styles.statValue}>{statistics.total_calories_burned.toFixed(0)} kcal</Text>
+                  <View style={styles.statRow} testID="stat-row-calories-burned">
+                    <Text style={styles.statLabel} testID="stat-label-calories-burned">Spalone kalorie:</Text>
+                    <Text style={styles.statValue} testID="stat-value-calories-burned">{statistics.total_calories_burned.toFixed(0)} kcal</Text>
                   </View>
                   {statistics.most_liked_activity && (
-                    <View style={styles.statRow}>
-                      <Text style={styles.statLabel}>Najbardziej lubisz:</Text>
-                      <Text style={styles.statValue}>{getActivityTypeName(statistics.most_liked_activity)}</Text>
+                    <View style={styles.statRow} testID="stat-row-most-liked">
+                      <Text style={styles.statLabel} testID="stat-label-most-liked">Najbardziej lubisz:</Text>
+                      <Text style={styles.statValue} testID="stat-value-most-liked">{getActivityTypeName(statistics.most_liked_activity)}</Text>
                     </View>
                   )}
                 </View>
@@ -124,32 +132,37 @@ export default function Home({ navigation }) {
             )}
           </View>
 
-          <View style={styles.statsCard}>
+          <View style={styles.statsCard} testID="activity-ranking-card">
             {statistics && (
               <>
-                <Text style={styles.sectionTitle}>Twój ranking aktywności</Text>
-                <ScrollView style={styles.statsScroll}>
-                  <View style={styles.statsContainer}>
+                <Text style={styles.sectionTitle} testID="activity-ranking-title">
+                  Twój ranking aktywności
+                </Text>
+                <ScrollView style={styles.statsScroll} testID="activity-ranking-scroll">
+                  <View style={styles.statsContainer} testID="activity-ranking-container">
                     {statistics.activities.length === 0 ? (
-                      <View style={globalStyles.centeredContainer}>
-                        <Text style={globalStyles.subtitle}>
+                      <View style={globalStyles.centeredContainer} testID="no-activities-container">
+                        <Text style={globalStyles.subtitle} testID="no-activities-message">
                           Hej, nie masz jeszcze żadnych aktywności w tym okresie! Może czas się poruszać?
                         </Text>
                         <TouchableOpacity
                           style={globalStyles.button}
                           onPress={() => navigation.navigate('Nowa aktywność')}
+                          testID="new-activity-button"
                         >
                           <Text style={globalStyles.buttonText}>Przejdź do aktywności</Text>
                         </TouchableOpacity>
                       </View>
                     ) : (
                       statistics.activities.map((activity, index) => (
-                        <View key={index} style={styles.activityCard}>
-                          <Text style={styles.activityTitle}>{getActivityTypeName(activity.activity)}</Text>
-                          <Text>Liczba wystąpień: {activity.count}</Text>
-                          <Text>Dystans: {(activity.distance / 1000).toFixed(2)} km</Text>
-                          <Text>Czas: {formatTime(activity.time)}</Text>
-                          <Text>Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal</Text>
+                        <View key={index} style={styles.activityCard} testID={`activity-card-${index}`}>
+                          <Text style={styles.activityTitle} testID={`activity-title-${index}`}>
+                            {getActivityTypeName(activity.activity)}
+                          </Text>
+                          <Text testID={`activity-count-${index}`}>Liczba wystąpień: {activity.count}</Text>
+                          <Text testID={`activity-distance-${index}`}>Dystans: {(activity.distance / 1000).toFixed(2)} km</Text>
+                          <Text testID={`activity-time-${index}`}>Czas: {formatTime(activity.time)}</Text>
+                          <Text testID={`activity-calories-${index}`}>Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal</Text>
                         </View>
                       ))
                     )}
