@@ -113,8 +113,8 @@ describe('Komponent Account', () => {
 
     fireEvent.press(getByText('Edytuj dane'));
     const checkboxes = getAllByRole('checkbox');
-    const maleCheckbox = checkboxes[0]; 
-    const femaleCheckbox = checkboxes[1]; 
+    const maleCheckbox = checkboxes[0];
+    const femaleCheckbox = checkboxes[1];
 
     fireEvent(maleCheckbox, 'valueChange', true);
 
@@ -130,7 +130,7 @@ describe('Komponent Account', () => {
     fireEvent.changeText(getByPlaceholderText('Waga (kg)'), '75.5');
     fireEvent.changeText(getByPlaceholderText('Wzrost (cm)'), '175');
     const checkboxes = getAllByRole('checkbox');
-    const femaleCheckbox = checkboxes[1]; 
+    const femaleCheckbox = checkboxes[1];
     fireEvent(femaleCheckbox, 'valueChange', true);
     fireEvent.press(getByText('Zapisz'));
 
@@ -211,7 +211,6 @@ describe('Komponent Account', () => {
     const femaleCheckbox = checkboxes[1];
     fireEvent(femaleCheckbox, 'valueChange', true);
     fireEvent.press(getByText('Anuluj'));
-
 
     fireEvent.press(getByText('Edytuj dane'));
 

@@ -13,7 +13,7 @@ jest.mock('@react-navigation/stack', () => {
 });
 
 jest.mock('../../screens/Login', () => () => {
-  const {Text } = require('react-native');
+  const { Text } = require('react-native');
   return <Text>Zaloguj się</Text>;
 });
 jest.mock('../../screens/Register', () => () => {
@@ -27,5 +27,4 @@ describe('Komponent AuthStack', () => {
     expect(getByText('Zaloguj się')).toBeTruthy();
     expect(getByText('Zarejestruj się')).toBeTruthy();
   });
-
 });

@@ -106,25 +106,45 @@ export default function Home({ navigation }) {
                     Twoje statystyki
                   </Text>
                   <View style={styles.statRow} testID="stat-row-average-speed">
-                    <Text style={styles.statLabel} testID="stat-label-average-speed">Średnia prędkość:</Text>
-                    <Text style={styles.statValue} testID="stat-value-average-speed">{statistics.average_speed.toFixed(2)} km/h</Text>
+                    <Text style={styles.statLabel} testID="stat-label-average-speed">
+                      Średnia prędkość:
+                    </Text>
+                    <Text style={styles.statValue} testID="stat-value-average-speed">
+                      {statistics.average_speed.toFixed(2)} km/h
+                    </Text>
                   </View>
                   <View style={styles.statRow} testID="stat-row-total-distance">
-                    <Text style={styles.statLabel} testID="stat-label-total-distance">Całkowity dystans:</Text>
-                    <Text style={styles.statValue} testID="stat-value-total-distance">{(statistics.total_distance / 1000).toFixed(2)} km</Text>
+                    <Text style={styles.statLabel} testID="stat-label-total-distance">
+                      Całkowity dystans:
+                    </Text>
+                    <Text style={styles.statValue} testID="stat-value-total-distance">
+                      {(statistics.total_distance / 1000).toFixed(2)} km
+                    </Text>
                   </View>
                   <View style={styles.statRow} testID="stat-row-total-time">
-                    <Text style={styles.statLabel} testID="stat-label-total-time">Całkowity czas:</Text>
-                    <Text style={styles.statValue} testID="stat-value-total-time">{formatTime(statistics.total_time)}</Text>
+                    <Text style={styles.statLabel} testID="stat-label-total-time">
+                      Całkowity czas:
+                    </Text>
+                    <Text style={styles.statValue} testID="stat-value-total-time">
+                      {formatTime(statistics.total_time)}
+                    </Text>
                   </View>
                   <View style={styles.statRow} testID="stat-row-calories-burned">
-                    <Text style={styles.statLabel} testID="stat-label-calories-burned">Spalone kalorie:</Text>
-                    <Text style={styles.statValue} testID="stat-value-calories-burned">{statistics.total_calories_burned.toFixed(0)} kcal</Text>
+                    <Text style={styles.statLabel} testID="stat-label-calories-burned">
+                      Spalone kalorie:
+                    </Text>
+                    <Text style={styles.statValue} testID="stat-value-calories-burned">
+                      {statistics.total_calories_burned.toFixed(0)} kcal
+                    </Text>
                   </View>
                   {statistics.most_liked_activity && (
                     <View style={styles.statRow} testID="stat-row-most-liked">
-                      <Text style={styles.statLabel} testID="stat-label-most-liked">Najbardziej lubisz:</Text>
-                      <Text style={styles.statValue} testID="stat-value-most-liked">{getActivityTypeName(statistics.most_liked_activity)}</Text>
+                      <Text style={styles.statLabel} testID="stat-label-most-liked">
+                        Najbardziej lubisz:
+                      </Text>
+                      <Text style={styles.statValue} testID="stat-value-most-liked">
+                        {getActivityTypeName(statistics.most_liked_activity)}
+                      </Text>
                     </View>
                   )}
                 </View>
@@ -160,9 +180,13 @@ export default function Home({ navigation }) {
                             {getActivityTypeName(activity.activity)}
                           </Text>
                           <Text testID={`activity-count-${index}`}>Liczba wystąpień: {activity.count}</Text>
-                          <Text testID={`activity-distance-${index}`}>Dystans: {(activity.distance / 1000).toFixed(2)} km</Text>
+                          <Text testID={`activity-distance-${index}`}>
+                            Dystans: {(activity.distance / 1000).toFixed(2)} km
+                          </Text>
                           <Text testID={`activity-time-${index}`}>Czas: {formatTime(activity.time)}</Text>
-                          <Text testID={`activity-calories-${index}`}>Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal</Text>
+                          <Text testID={`activity-calories-${index}`}>
+                            Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal
+                          </Text>
                         </View>
                       ))
                     )}

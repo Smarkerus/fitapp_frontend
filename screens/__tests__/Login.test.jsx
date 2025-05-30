@@ -27,7 +27,7 @@ describe('Komponent Login', () => {
 
   it('Renderuje komponent poprawnie', () => {
     const { getByText, getByPlaceholderText } = renderComponent();
-    
+
     expect(getByText('Podaj dane logowania')).toBeTruthy();
     expect(getByPlaceholderText('Nazwa użytkownika')).toBeTruthy();
     expect(getByPlaceholderText('Hasło')).toBeTruthy();
@@ -38,7 +38,7 @@ describe('Komponent Login', () => {
   it('Aktualizuje pole username po wpisaniu tekstu', () => {
     const { getByPlaceholderText } = renderComponent();
     const usernameInput = getByPlaceholderText('Nazwa użytkownika');
-    
+
     fireEvent.changeText(usernameInput, 'testuser');
     expect(usernameInput.props.value).toBe('testuser');
   });
@@ -46,7 +46,7 @@ describe('Komponent Login', () => {
   it('Aktualizuje pole hasła po wpisaniu tekstu', () => {
     const { getByPlaceholderText } = renderComponent();
     const passwordInput = getByPlaceholderText('Hasło');
-    
+
     fireEvent.changeText(passwordInput, 'testpassword');
     expect(passwordInput.props.value).toBe('testpassword');
   });

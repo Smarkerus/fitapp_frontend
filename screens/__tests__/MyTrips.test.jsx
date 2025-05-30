@@ -28,16 +28,18 @@ jest.mock('@react-navigation/native', () => ({
   useFocusEffect: jest.fn(),
 }));
 
-const mockTrip = [{
-  summary: {
-    trip_id: 1,
-    session_id: 1,
-    start_time: '2023-01-01T00:00:00Z',
-    distance: 5000,
+const mockTrip = [
+  {
+    summary: {
+      trip_id: 1,
+      session_id: 1,
+      start_time: '2023-01-01T00:00:00Z',
+      distance: 5000,
+    },
+    points: [{ latitude: 52.2297, longitude: 21.0122 }],
+    name: 'Testowa Trasa',
   },
-  points: [{ latitude: 52.2297, longitude: 21.0122 }],
-  name: 'Testowa Trasa',
-}];
+];
 
 describe('Ekran Moje Trasy', () => {
   beforeAll(() => {
@@ -54,12 +56,11 @@ describe('Ekran Moje Trasy', () => {
 
   it('Wyświetla komunikat gdy brak tras', async () => {
     const mockFetchUserTrips = jest.fn().mockResolvedValue([]);
-    jest.spyOn(require('@react-navigation/native'), 'useFocusEffect')
-      .mockImplementationOnce((callback) => {
-        act(() => {
-          callback();
-        });
+    jest.spyOn(require('@react-navigation/native'), 'useFocusEffect').mockImplementationOnce(callback => {
+      act(() => {
+        callback();
       });
+    });
 
     render(
       <ApiContext.Provider value={{ fetchUserTrips: mockFetchUserTrips }}>
@@ -78,12 +79,11 @@ describe('Ekran Moje Trasy', () => {
 
   it('Wyświetla komponent z trasą', async () => {
     const mockFetchUserTrips = jest.fn().mockResolvedValue(mockTrip);
-    jest.spyOn(require('@react-navigation/native'), 'useFocusEffect')
-      .mockImplementationOnce((callback) => {
-        act(() => {
-          callback();
-        });
+    jest.spyOn(require('@react-navigation/native'), 'useFocusEffect').mockImplementationOnce(callback => {
+      act(() => {
+        callback();
       });
+    });
 
     render(
       <ApiContext.Provider value={{ fetchUserTrips: mockFetchUserTrips }}>

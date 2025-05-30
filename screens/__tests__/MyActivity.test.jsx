@@ -1,4 +1,3 @@
-
 import { render, fireEvent, act } from '@testing-library/react-native';
 import MyActivity from '../MyActivity';
 import { AuthContext } from '../../context/AuthContext';
@@ -6,9 +5,7 @@ import { ApiContext } from '../../context/ApiContext';
 import { LocationContext } from '../../context/LocationContext';
 import * as Location from 'expo-location';
 
-
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
-
 
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(),
@@ -121,7 +118,6 @@ describe('Ekran Moja Aktuywność', () => {
     await act(async () => {
       fireEvent.press(getByText('Zakończ aktywność'));
     });
-
 
     expect(queryByText('00:00:00')).toBeNull();
     expect(queryByText('Zakończ aktywność')).toBeNull();

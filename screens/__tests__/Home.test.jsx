@@ -83,7 +83,7 @@ describe('Komponent główny (Home)', () => {
 
   it('Renderuje wskaźnik ładowania podczas pobierania statystyk', async () => {
     mockFetchUserStatistics.mockImplementation(() => new Promise(() => {}));
-    
+
     const { getByTestId } = renderWithProviders(<Home navigation={mockNavigation} />);
     expect(getByTestId('loading-indicator')).toBeTruthy();
 
@@ -111,10 +111,7 @@ describe('Komponent główny (Home)', () => {
     await act(async () => {
       fireEvent.press(getByTestId('period-button-7days'));
     });
-    expect(mockFetchUserStatistics).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.any(String)
-    );
+    expect(mockFetchUserStatistics).toHaveBeenCalledWith(expect.any(String), expect.any(String));
   });
 
   it('Wyświetla statystyki poprawnie', async () => {

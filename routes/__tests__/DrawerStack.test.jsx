@@ -9,7 +9,7 @@ jest.mock('@react-navigation/drawer', () => {
       Navigator: ({ children }) => <>{children}</>,
       Screen: ({ name, listeners }) => (
         <Text
-          testID={`screen-${name}`} 
+          testID={`screen-${name}`}
           onPress={() => {
             const event = { preventDefault: jest.fn() };
             listeners?.drawerItemPress?.(event);

@@ -19,7 +19,6 @@ jest.mock('@react-native-firebase/messaging', () => {
   });
 });
 
-
 let mockAsyncStore = {};
 AsyncStorage.getItem = jest.fn().mockImplementation(key => Promise.resolve(mockAsyncStore[key] || null));
 AsyncStorage.setItem = jest.fn().mockImplementation((key, value) => {
@@ -67,7 +66,14 @@ describe('Komponent Przypominajki', () => {
   const renderComponent = () => {
     const wrapper = ({ children }) => (
       <AuthContext.Provider value={{ user: { email: 'test@example.com', token: 'mock-token' } }}>
-        <NotificationContext.Provider value={{ fetchReminder: mockFetchReminder, createReminder: mockCreateReminder, editReminder: mockEditReminder, deleteReminder: mockDeleteReminder }}>
+        <NotificationContext.Provider
+          value={{
+            fetchReminder: mockFetchReminder,
+            createReminder: mockCreateReminder,
+            editReminder: mockEditReminder,
+            deleteReminder: mockDeleteReminder,
+          }}
+        >
           {children}
         </NotificationContext.Provider>
       </AuthContext.Provider>
@@ -95,7 +101,12 @@ describe('Komponent Przypominajki', () => {
     fireEvent.changeText(timeInput, '50');
     fireEvent.press(screen.getByText('Zapisz'));
     await waitFor(() => expect(mockCreateReminder).toHaveBeenCalledWith(500, 5000, 3000));
-    await waitFor(() => expect(AsyncStorage.setItem).toHaveBeenCalledWith('reminder_test@example.com', JSON.stringify({ min_calories: 500, min_distance: 5000, min_time: 3000 })));
+    await waitFor(() =>
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        'reminder_test@example.com',
+        JSON.stringify({ min_calories: 500, min_distance: 5000, min_time: 3000 })
+      )
+    );
     expect(screen.getByText('Twoja przypominajka')).toBeTruthy();
     expect(screen.getByText('Minimalna liczba kalorii: 500')).toBeTruthy();
     expect(screen.getByText('Minimalny dystans: 5 km')).toBeTruthy();
@@ -115,7 +126,12 @@ describe('Komponent Przypominajki', () => {
     fireEvent.changeText(timeInput, '60');
     fireEvent.press(screen.getByText('Zapisz'));
     await waitFor(() => expect(mockEditReminder).toHaveBeenCalledWith(600, 6000, 3600));
-    await waitFor(() => expect(AsyncStorage.setItem).toHaveBeenCalledWith('reminder_test@example.com', JSON.stringify({ min_calories: 600, min_distance: 6000, min_time: 3600 })));
+    await waitFor(() =>
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        'reminder_test@example.com',
+        JSON.stringify({ min_calories: 600, min_distance: 6000, min_time: 3600 })
+      )
+    );
     expect(screen.getByText('Minimalna liczba kalorii: 600')).toBeTruthy();
     expect(screen.getByText('Minimalny dystans: 6 km')).toBeTruthy();
     expect(screen.getByText('Minimalny czas: 60 minut')).toBeTruthy();
