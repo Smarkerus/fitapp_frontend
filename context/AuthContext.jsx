@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      console.log('Logowanie', BACKEND_URL);
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
@@ -52,7 +51,6 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(`${BACKEND_URL}users/login`, formData.toString(), {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
-      console.log('Logowanie2', BACKEND_URL);
 
       const access_token = response.data.access_token;
 
