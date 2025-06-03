@@ -2,7 +2,7 @@ module.exports = {
   preset: 'jest-expo',
   setupFiles: ['./jestSetup.js'],
   transformIgnorePatterns: [
-    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|'testing-library'|@react-native-async-storage/async-storage|@react-native-firebase/.*|@react-native-google-signin/.*|@react-native-firebase/messaging|@react-native-picker/.*|@react-native-community/.*)",
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|'testing-library'|@react-native-async-storage/async-storage|@react-native-firebase/.*|@react-native-google-signin/.*|@react-native-firebase/messaging|@react-native-orientation-locker|@react-native-picker/.*|@react-native-community/.*)",
   ],
   collectCoverage: true,
   coverageDirectory: 'coverage',

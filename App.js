@@ -8,6 +8,7 @@ import AppNavigator from './routes/AppNavigator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import { NotificationProvider } from './context/NotificationContext';
+import Orientation from 'react-native-orientation-locker';
 
 enableScreens();
 
@@ -27,6 +28,13 @@ export default function App() {
   useEffect(() => {
     onAppReady();
   }, [onAppReady]);
+
+  useEffect(() => {
+    Orientation.lockToPortrait();
+    return () => {
+      Orientation.unlockAllOrientations();
+    };
+  }, []);
 
   return (
     <SafeAreaProvider>

@@ -4,7 +4,12 @@ import * as SplashScreen from 'expo-splash-screen';
 
 jest.mock('expo-splash-screen', () => ({
   preventAutoHideAsync: jest.fn(),
-  hideAsync: jest.fn(),
+  hideAsync: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock('react-native-orientation-locker', () => ({
+  lockToPortrait: jest.fn(),
+  unlockAllOrientations: jest.fn(),
 }));
 
 jest.mock('../routes/AppNavigator', () => 'AppNavigator');
@@ -50,31 +55,39 @@ describe('Aplikacja', () => {
     jest.clearAllMocks();
   });
 
-  test('wywołuje onAppReady przy załadowaniu i ukrywa ekran startowy', async () => {
+  test('Renderuje komponent App i ukrywa ekran startowy po inicjalizacji', async () => {
     const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     render(<App />);
     await waitFor(() => {
       expect(consoleLogSpy).toHaveBeenCalledWith('Inicjalizacja aplikacji...');
-      expect(SplashScreen.hideAsync).toHaveBeenCalled();
+      expect(SplashScreen.hideAsync).toHaveBeenCalledTimes(1);
+      expect(SplashScreen.hideAsync).toHaveBeenCalledWith();
     });
     consoleLogSpy.mockRestore();
-    consoleErrorSpy.mockRestore();
   });
 
-  test('obsługuje błąd w onAppReady i ukrywa ekran startowy', async () => {
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+  test('Obsługuje błąd w onAppReady i nadal ukrywa ekran startowy', async () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    const error = new Error('Initialization error');
-    jest.spyOn(console, 'log').mockImplementation(() => {
+    const error = new Error('Błąd podczas inicjalizacji aplikacji:');
+    jest.spyOn(console, 'log').mockImplementationOnce(() => {
       throw error;
     });
     render(<App />);
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith('Błąd podczas inicjalizacji aplikacji:', error);
-      expect(SplashScreen.hideAsync).toHaveBeenCalled();
+      expect(SplashScreen.hideAsync).toHaveBeenCalledTimes(1);
+      expect(SplashScreen.hideAsync).toHaveBeenCalledWith();
     });
-    consoleLogSpy.mockRestore();
     consoleErrorSpy.mockRestore();
+    jest.spyOn(console, 'log').mockRestore();
+  });
+
+  test('Blokuje orientację na portret przy montowaniu i odblokowuje przy odmontowaniu', async () => {
+    const { unmount } = render(<App />);
+    await waitFor(() => {
+      expect(require('react-native-orientation-locker').lockToPortrait).toHaveBeenCalledTimes(1);
+    });
+    unmount();
+    expect(require('react-native-orientation-locker').unlockAllOrientations).toHaveBeenCalledTimes(1);
   });
 });
