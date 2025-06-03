@@ -1,4 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions, PixelRatio } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+const { width, height } = Dimensions.get('window');
+
+const scale = size => {
+  const guidelineBaseWidth = 375;
+  return (width / guidelineBaseWidth) * size;
+};
+
+const scaleFont = size => {
+  return Math.round(PixelRatio.roundToNearestPixel(scale(size)));
+};
 
 const colors = {
   primary: '#4CAF50',
@@ -13,16 +25,16 @@ const colors = {
 };
 
 const sizes = {
-  small: 12,
-  medium: 16,
-  large: 20,
-  xLarge: 24,
+  small: scaleFont(12),
+  medium: scaleFont(16),
+  large: scaleFont(20),
+  xLarge: scaleFont(24),
 };
 
 const spacing = {
-  small: 8,
-  medium: 16,
-  large: 24,
+  small: scale(8),
+  medium: scale(16),
+  large: scale(24),
 };
 
 export const globalStyles = StyleSheet.create({
@@ -32,7 +44,7 @@ export const globalStyles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: spacing.medium,
+    padding: wp('4%'),
   },
   centeredContainer: {
     flex: 1,
@@ -41,8 +53,8 @@ export const globalStyles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.primary,
-    padding: spacing.medium,
-    borderRadius: 8,
+    padding: wp('4%'),
+    borderRadius: scale(8),
     alignItems: 'center',
     marginVertical: spacing.small,
   },
@@ -53,8 +65,8 @@ export const globalStyles = StyleSheet.create({
   },
   secondaryButton: {
     backgroundColor: colors.secondary,
-    padding: spacing.medium,
-    borderRadius: 8,
+    padding: wp('4%'),
+    borderRadius: scale(8),
     alignItems: 'center',
     marginVertical: spacing.small,
   },
@@ -64,10 +76,10 @@ export const globalStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
   outlineButton: {
-    borderWidth: 2,
+    borderWidth: scale(2),
     borderColor: colors.primary,
-    padding: spacing.medium,
-    borderRadius: 8,
+    padding: wp('4%'),
+    borderRadius: scale(8),
     alignItems: 'center',
     marginVertical: spacing.small,
   },
@@ -78,8 +90,8 @@ export const globalStyles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: colors.lightGray,
-    padding: spacing.medium,
-    borderRadius: 8,
+    padding: wp('4%'),
+    borderRadius: scale(8),
     alignItems: 'center',
     marginVertical: spacing.small,
   },
@@ -88,10 +100,10 @@ export const globalStyles = StyleSheet.create({
     fontSize: sizes.medium,
   },
   input: {
-    borderWidth: 1,
+    borderWidth: scale(1),
     borderColor: colors.lightGray,
-    padding: spacing.medium,
-    borderRadius: 8,
+    padding: wp('4%'),
+    borderRadius: scale(8),
     marginVertical: spacing.small,
     fontSize: sizes.medium,
     backgroundColor: colors.white,
@@ -131,18 +143,18 @@ export const globalStyles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    padding: spacing.medium,
+    padding: wp('4%'),
   },
   listItem: {
     backgroundColor: colors.white,
-    padding: spacing.medium,
-    borderRadius: 8,
+    padding: wp('4%'),
+    borderRadius: scale(8),
     marginVertical: spacing.small,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: scale(2) },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: scale(4),
+    elevation: scale(2),
   },
   listItemText: {
     fontSize: sizes.medium,
@@ -155,40 +167,40 @@ export const globalStyles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '100%',
+    height: hp('100%'),
   },
   separator: {
-    height: 1,
+    height: scale(1),
     backgroundColor: colors.lightGray,
     marginVertical: spacing.medium,
   },
   scrollView: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: scale(12),
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: scale(2) },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    padding: 16,
+    shadowRadius: scale(4),
+    elevation: scale(2),
+    padding: wp('4%'),
   },
   card: {
     backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.medium,
+    borderRadius: scale(12),
+    padding: wp('4%'),
     marginVertical: spacing.small,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: scale(4) },
     shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowRadius: scale(6),
+    elevation: scale(4),
   },
   cardTitle: {
     fontSize: sizes.large,
     fontWeight: 'bold',
     color: colors.text,
   },
-  colors: colors,
-  spacing: spacing,
-  sizes: sizes,
+  colors,
+  spacing,
+  sizes,
 });
