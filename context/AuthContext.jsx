@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -14,16 +14,13 @@ export const AuthProvider = ({ children }) => {
 
   const loadUser = async () => {
     let token;
-    if (Platform.OS === 'web') {
-      token = await AsyncStorage.getItem('userToken');
-    } else {
-      token = await SecureStore.getItemAsync('userToken');
-    }
+    token = await SecureStore.getItemAsync('userToken');
     if (token) {
       try {
         const userData = await fetchUserData(token);
         setUser({ token, ...userData });
       } catch (error) {
+        console.error("Błąd podczas pobierania danych użytkownika:", error);
         await logout();
       }
     } else {
@@ -32,18 +29,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const fetchUserData = async token => {
-    try {
       const response = await axios.get(`${BACKEND_URL}users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   };
 
   const login = async (username, password) => {
-    try {
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
@@ -62,27 +54,20 @@ export const AuthProvider = ({ children }) => {
 
       const userData = await fetchUserData(access_token);
       setUser({ token: access_token, ...userData });
-    } catch (error) {
-      throw error;
-    }
   };
 
   const logout = async () => {
     setUser(null);
-    if (Platform.OS === 'web') {
-      await AsyncStorage.removeItem('userToken');
-    } else {
-      await SecureStore.deleteItemAsync('userToken');
-    }
     try {
+      await SecureStore.deleteItemAsync('userToken');
       await axios.post(`${BACKEND_URL}users/logout`);
     } catch (error) {
+      console.error("Błąd podczas wylogowywania:", error);
       throw error;
     }
   };
 
   const register = async (email, password, name, last_name) => {
-    try {
       await axios.post(
         `${BACKEND_URL}users/register`,
         {
@@ -99,13 +84,9 @@ export const AuthProvider = ({ children }) => {
           headers: { 'Content-Type': 'application/json', accept: 'application/json' },
         }
       );
-    } catch (error) {
-      throw error;
-    }
   };
 
   const editUserDetails = async (weight, height, age, gender) => {
-    try {
       const response = await axios.put(
         `${BACKEND_URL}users/me/details`,
         {
@@ -122,9 +103,6 @@ export const AuthProvider = ({ children }) => {
       );
       await loadUser();
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   };
 
   return (

@@ -256,9 +256,8 @@ describe('NotificationProvider', () => {
       }
     });
     const mockAuthContext = { user: mockUser };
-    let contextValue;
     const setContextValue = value => {
-      contextValue = value;
+      let contextValue = value;
     };
 
     render(

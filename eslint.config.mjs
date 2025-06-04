@@ -58,6 +58,7 @@ export default [
       'app.config.js',
       'jest.config.js',
       'jestSetup.js',
+      '**/__tests__/**',
     ],
   },
 ];

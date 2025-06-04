@@ -20,6 +20,7 @@ export const NotificationProvider = ({ children }) => {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     if (enabled) {
+      console.log("Przyznano uprawnienia do powiadomień FCM");
     }
   };
 
@@ -47,7 +48,7 @@ export const NotificationProvider = ({ children }) => {
     if (fcmToken && user) {
       uploadFcmToken();
     }
-  }, [fcmToken, user]);
+  }, [uploadFcmToken, fcmToken, user]);
 
   const uploadFcmToken = useCallback(async () => {
     if (!fcmToken || typeof fcmToken !== 'string' || fcmToken.trim() === '') {
@@ -58,25 +59,20 @@ export const NotificationProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${user.token}`, 'Content-Type': 'application/json' },
       });
     } catch (error) {
-      throw error;
+      console.error("Błąd podczas przesyłania tokenu FCM:", error);
     }
   }, [fcmToken, user]);
 
   const fetchReminder = useCallback(async () => {
-    try {
       const response = await axios.get(`${BACKEND_URL}reminders/reminders/`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setReminder(response.data);
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   }, [user]);
 
   const createReminder = useCallback(
     async (min_calories, min_distance, min_time) => {
-      try {
         const response = await axios.post(
           `${BACKEND_URL}reminders/reminders/`,
           {
@@ -92,19 +88,15 @@ export const NotificationProvider = ({ children }) => {
         );
         setReminder(response.data);
         return response.data;
-      } catch (error) {
-        throw error;
-      }
     },
     [user]
   );
 
   const editReminder = useCallback(
     async (min_calories, min_distance, min_time) => {
-      try {
-        const response = await axios.put(
-          `${BACKEND_URL}reminders/reminders/`,
-          {
+      const response = await axios.put(
+        `${BACKEND_URL}reminders/reminders/`,
+        {
             id: user.id,
             user_id: user.id,
             min_calories,
@@ -117,22 +109,15 @@ export const NotificationProvider = ({ children }) => {
         );
         setReminder(response.data);
         return response.data;
-      } catch (error) {
-        throw error;
-      }
     },
     [user]
   );
 
   const deleteReminder = useCallback(async () => {
-    try {
       await axios.delete(`${BACKEND_URL}reminders/reminders/`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setReminder(null);
-    } catch (error) {
-      throw error;
-    }
   }, [user]);
 
   return (

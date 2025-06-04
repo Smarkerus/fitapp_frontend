@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { globalStyles } from '../styles';
 import React, { useContext, useState, useCallback } from 'react';
 import { ApiContext } from '../context/ApiContext';
@@ -101,16 +101,16 @@ export default function MyTrips() {
           <Text style={globalStyles.listItemSubtitle}>Dystans: {(item.summary.distance / 1000).toFixed(2)} km</Text>
         </TouchableOpacity>
         {expandedTripId === item.summary.trip_id && (
-          <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(300)} style={{ marginTop: 16 }}>
+          <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(300)} style={styles.expandedContainer}>
             <Text style={globalStyles.listItemText}>Czas: {(item.summary.duration / 3600).toFixed(2)} h</Text>
             <Text style={globalStyles.listItemText}>Średnia prędkość: {computeAverageSpeed(item).toFixed(2)} km/h</Text>
             <Text style={globalStyles.listItemText}>
               Liczba spalonych kalorii: {Number(item.summary.calories_burned).toFixed(0)} kcal
             </Text>
-            <View style={{ height: 200, marginTop: 16 }}>
+            <View style={styles.mapContainer}>
               <MapView
                 provider={PROVIDER_GOOGLE}
-                style={{ flex: 1 }}
+                style={styles.map}
                 region={getRegionForCoordinates(item.points)}
                 scrollEnabled={false}
                 zoomEnabled={false}
@@ -130,7 +130,7 @@ export default function MyTrips() {
     return (
       <View style={[globalStyles.background, globalStyles.centeredContainer]}>
         <ActivityIndicator size="large" color={globalStyles.colors.primary} />
-        <Text style={[globalStyles.text, { marginTop: 16 }]}>Ładowanie tras...</Text>
+        <Text style={[globalStyles.text, styles.loadingText]}>Ładowanie tras...</Text>
       </View>
     );
   }
@@ -157,3 +157,19 @@ export default function MyTrips() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  expandedContainer: {
+    marginTop: 16,
+  },
+  mapContainer: {
+    height: 200,
+    marginTop: 16,
+  },
+  map: {
+    flex: 1,
+  },
+  loadingText: {
+    marginTop: 16,
+  },
+});

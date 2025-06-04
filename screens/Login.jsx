@@ -14,6 +14,7 @@ export default function Login({ navigation }) {
       await login(username, password);
     } catch (err) {
       setError('Nieprawidłowe dane logowania');
+      console.error('Błąd logowania:', err);
     }
   };
 

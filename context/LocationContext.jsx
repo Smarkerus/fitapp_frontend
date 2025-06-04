@@ -12,7 +12,6 @@ export const LocationProvider = ({ children }) => {
 
   const uploadGpsPoints = useCallback(
     async points => {
-      try {
         await axios.post(`${BACKEND_URL}gps/`, points, {
           headers: {
             'Content-Type': 'application/json',
@@ -21,9 +20,6 @@ export const LocationProvider = ({ children }) => {
         });
         console.log('Punkty GPS zostały pomyślnie przesłane.');
         return true;
-      } catch (error) {
-        throw error;
-      }
     },
     [user]
   );

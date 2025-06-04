@@ -37,6 +37,7 @@ export default function Account({ navigation }) {
       Alert.alert('Sukces', 'Dane zostały zapisane!');
       setIsEditing(false);
     } catch (error) {
+      console.error('Błąd podczas zapisywania danych:', error);
       Alert.alert('Błąd', 'Wystąpił błąd podczas zapisywania danych.');
     }
   };

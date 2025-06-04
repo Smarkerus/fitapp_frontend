@@ -40,6 +40,7 @@ export const ApiProvider = ({ children }) => {
       setActivityTypes(integratedTypes);
       return integratedTypes;
     } catch (error) {
+      console.error("Wystąpił błąd podczas pobierania typów aktywności:", error);
       throw error;
     }
   }, [user]);
@@ -52,7 +53,6 @@ export const ApiProvider = ({ children }) => {
 
   const fetchUserStatistics = useCallback(
     async (start_time, end_time) => {
-      try {
         const response = await axios.post(
           `${BACKEND_URL}statistics/statistics`,
           {
@@ -65,9 +65,6 @@ export const ApiProvider = ({ children }) => {
           }
         );
         return response.data;
-      } catch (error) {
-        throw error;
-      }
     },
     [user]
   );
@@ -81,20 +78,17 @@ export const ApiProvider = ({ children }) => {
       const tripDetailsPromises = tripIds.map(tripId => fetchUserTripsDetails(tripId));
       return await Promise.all(tripDetailsPromises);
     } catch (error) {
+      console.error("Wystąpił błąd podczas pobierania tras użytkownika:", error);
       throw error;
     }
-  }, [user]);
+  }, [user, fetchUserTripsDetails]);
 
   const fetchUserTripsDetails = useCallback(
     async tripId => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}trips/trips/${tripId}`, {
+      const response = await axios.get(`${BACKEND_URL}trips/trips/${tripId}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         return response.data;
-      } catch (error) {
-        throw error;
-      }
     },
     [user]
   );

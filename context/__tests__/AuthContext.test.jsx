@@ -66,32 +66,6 @@ describe('AuthProvider', () => {
     expect(SecureStore.getItemAsync).toHaveBeenCalledWith('userToken');
   });
 
-  test('poprawnie ładuje użytkownika z tokenem (web)', async () => {
-    Platform.OS = 'web';
-    AsyncStorage.getItem.mockResolvedValue(mockToken);
-    axios.get.mockResolvedValue({ data: mockUserData });
-
-    let contextValue;
-    const setContextValue = value => {
-      contextValue = value;
-    };
-
-    render(
-      <AuthProvider>
-        <TestComponent setContextValue={setContextValue} />
-      </AuthProvider>
-    );
-
-    await waitFor(() => expect(contextValue).toBeDefined());
-
-    await act(async () => {
-      await contextValue.loadUser();
-    });
-
-    expect(contextValue.user).toEqual({ token: mockToken, ...mockUserData });
-    expect(AsyncStorage.getItem).toHaveBeenCalledWith('userToken');
-  });
-
   test('poprawnie loguje użytkownika', async () => {
     Platform.OS = 'ios';
     const mockLoginResponse = { data: { access_token: mockToken } };

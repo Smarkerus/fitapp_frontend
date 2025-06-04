@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/AuthContext';
 import { NotificationContext } from '../context/NotificationContext';
 import { globalStyles } from '../styles';
 
-export default function Reminder({ navigation }) {
+export default function Reminder({ _navigation }) {
   const { user } = useContext(AuthContext);
   const { fetchReminder, createReminder, editReminder, deleteReminder } = useContext(NotificationContext);
   const [reminderData, setReminderData] = useState(null);
@@ -17,19 +17,15 @@ export default function Reminder({ navigation }) {
     min_time: '',
   });
 
-  useEffect(() => {
-    loadReminder();
-  }, []);
-
-  const saveReminderLocally = async (email, data) => {
+  const saveReminderLocally = useCallback(async (email, data) => {
     try {
       await AsyncStorage.setItem(`reminder_${email}`, JSON.stringify(data));
     } catch (error) {
       console.error('Błąd zapisywania danych lokalnie', error);
     }
-  };
+  }, []);
 
-  const loadReminderLocally = async email => {
+  const loadReminderLocally = useCallback(async (email) => {
     try {
       const data = await AsyncStorage.getItem(`reminder_${email}`);
       return data ? JSON.parse(data) : null;
@@ -37,9 +33,9 @@ export default function Reminder({ navigation }) {
       console.error('Błąd ładowania danych lokalnie', error);
       return null;
     }
-  };
+  }, []);
 
-  const loadReminder = async () => {
+  const loadReminder = useCallback(async () => {
     try {
       const data = await fetchReminder();
       if (data) {
@@ -49,12 +45,13 @@ export default function Reminder({ navigation }) {
           min_distance: (data.min_distance / 1000).toString(),
           min_time: (data.min_time / 60).toString(),
         });
-        saveReminderLocally(user.email, data);
+        await saveReminderLocally(user.email, data);
       } else {
         setReminderData(null);
       }
     } catch (err) {
       setError('Błąd pobierania przypominajki');
+      console.error('Błąd pobierania przypominajki:', err);
       const localData = await loadReminderLocally(user.email);
       if (localData) {
         setReminderData(localData);
@@ -65,9 +62,9 @@ export default function Reminder({ navigation }) {
         });
       }
     }
-  };
+  }, [user.email, fetchReminder, saveReminderLocally, loadReminderLocally]);
 
-  const handleCreateOrUpdate = async () => {
+  const handleCreateOrUpdate = useCallback(async () => {
     const min_calories = parseInt(formData.min_calories);
     const min_distance_km = parseFloat(formData.min_distance);
     const min_time_min = parseInt(formData.min_time);
@@ -92,13 +89,14 @@ export default function Reminder({ navigation }) {
         await createReminder(min_calories, min_distance_m, min_time_s);
       }
       setIsEditing(false);
-      loadReminder();
+      await loadReminder();
     } catch (err) {
       setError('Błąd zapisywania przypominajki');
+      console.error('Błąd zapisywania przypominajki:', err);
     }
-  };
+  }, [formData, reminderData, createReminder, editReminder, loadReminder]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     Alert.alert('Potwierdzenie', 'Czy na pewno chcesz usunąć przypominajkę?', [
       { text: 'Anuluj', style: 'cancel' },
       {
@@ -111,19 +109,20 @@ export default function Reminder({ navigation }) {
             await AsyncStorage.removeItem(`reminder_${user.email}`);
           } catch (err) {
             setError('Błąd usuwania przypominajki');
+            console.error('Błąd usuwania przypominajki:', err);
           }
         },
       },
     ]);
-  };
+  }, [user.email, deleteReminder]);
 
-  const renderForm = () => (
+  const renderForm = useCallback(() => (
     <View>
       <Text style={globalStyles.subtitle}>Minimalna liczba kalorii</Text>
       <TextInput
         style={globalStyles.input}
         value={formData.min_calories}
-        onChangeText={value => setFormData({ ...formData, min_calories: value })}
+        onChangeText={(value) => setFormData({ ...formData, min_calories: value })}
         placeholder="Wprowadź minimalną liczbę kalorii"
         keyboardType="numeric"
         onSubmitEditing={handleCreateOrUpdate}
@@ -132,7 +131,7 @@ export default function Reminder({ navigation }) {
       <TextInput
         style={globalStyles.input}
         value={formData.min_distance}
-        onChangeText={value => setFormData({ ...formData, min_distance: value })}
+        onChangeText={(value) => setFormData({ ...formData, min_distance: value })}
         placeholder="Wprowadź minimalny dystans"
         keyboardType="numeric"
         onSubmitEditing={handleCreateOrUpdate}
@@ -141,7 +140,7 @@ export default function Reminder({ navigation }) {
       <TextInput
         style={globalStyles.input}
         value={formData.min_time}
-        onChangeText={value => setFormData({ ...formData, min_time: value })}
+        onChangeText={(value) => setFormData({ ...formData, min_time: value })}
         placeholder="Wprowadź minimalny czas"
         keyboardType="numeric"
         onSubmitEditing={handleCreateOrUpdate}
@@ -151,9 +150,9 @@ export default function Reminder({ navigation }) {
         <Text style={globalStyles.buttonText}>Zapisz</Text>
       </TouchableOpacity>
     </View>
-  );
+  ), [formData, error, handleCreateOrUpdate]);
 
-  const renderReminder = () => (
+  const renderReminder = useCallback(() => (
     <View>
       <Text style={globalStyles.title}>Twoja przypominajka</Text>
       <Text style={styles.infoText}>
@@ -171,9 +170,9 @@ export default function Reminder({ navigation }) {
         </TouchableOpacity>
       </View>
     </View>
-  );
+  ), [reminderData, handleDelete]);
 
-  const renderNoReminder = () => (
+  const renderNoReminder = useCallback(() => (
     <View>
       <Text style={globalStyles.title}>
         Nie masz jeszcze ustawionej przypominajki. Ustaw ją, by już zawsze pamiętać o swoim treningu!
@@ -182,7 +181,13 @@ export default function Reminder({ navigation }) {
         <Text style={globalStyles.buttonText}>Utwórz przypominajkę</Text>
       </TouchableOpacity>
     </View>
-  );
+  ), []);
+
+  useEffect(() => {
+    if (user?.email) {
+      loadReminder();
+    }
+  }, [loadReminder, user?.email]);
 
   return (
     <View style={globalStyles.background}>
@@ -192,6 +197,7 @@ export default function Reminder({ navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   infoText: {
     fontSize: globalStyles.sizes.medium,
