@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import { NotificationContext } from '../context/NotificationContext';
 import { globalStyles } from '../styles';
 
-export default function Reminder({ _navigation }) {
+export default function Reminder({ navigation }) {
   const { user } = useContext(AuthContext);
   const { fetchReminder, createReminder, editReminder, deleteReminder } = useContext(NotificationContext);
   const [reminderData, setReminderData] = useState(null);
