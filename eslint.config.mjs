@@ -60,7 +60,7 @@ export default [
       'jest.config.js',
       'jestSetup.js',
       '**/__tests__/**',
-      'coverage/**', 
+      'coverage/**',
     ],
   },
 ];

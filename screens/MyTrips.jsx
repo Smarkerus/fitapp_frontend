@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { FlatList } from 'react-native-gesture-handler';
 
-export default function MyTrips({navigation}) {
+export default function MyTrips({ navigation }) {
   const { fetchUserTrips } = useContext(ApiContext);
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);

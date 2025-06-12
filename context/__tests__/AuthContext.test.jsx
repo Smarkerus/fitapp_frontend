@@ -92,7 +92,7 @@ describe('AuthProvider', () => {
     expect(axios.post).toHaveBeenCalledWith(
       `${BACKEND_URL}users/login`,
       'username=test%40example.com&password=password',
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 10000  }
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 10000 }
     );
     expect(SecureStore.setItemAsync).toHaveBeenCalledWith('userToken', mockToken);
     expect(contextValue.user).toEqual({ token: mockToken, ...mockUserData });
