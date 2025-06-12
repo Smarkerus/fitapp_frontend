@@ -62,7 +62,7 @@ export default function Reminder({ navigation }) {
         });
       }
     }
-  }, [user.email, fetchReminder, saveReminderLocally, loadReminderLocally]);
+  }, [user?.email, fetchReminder, saveReminderLocally, loadReminderLocally]);
 
   const handleCreateOrUpdate = useCallback(async () => {
     const min_calories = parseInt(formData.min_calories);
@@ -114,7 +114,7 @@ export default function Reminder({ navigation }) {
         },
       },
     ]);
-  }, [user.email, deleteReminder]);
+  }, [user?.email, deleteReminder]);
 
   const renderForm = useCallback(
     () => (
@@ -193,10 +193,10 @@ export default function Reminder({ navigation }) {
   );
 
   useEffect(() => {
-    if (user?.email) {
+    if (user) {
       loadReminder();
     }
-  }, [loadReminder, user?.email]);
+  }, []);
 
   return (
     <View style={globalStyles.background}>

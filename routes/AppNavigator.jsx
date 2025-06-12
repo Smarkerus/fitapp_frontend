@@ -11,7 +11,7 @@ function AppNavigator() {
       await loadUser();
     };
     fetchUser();
-  }, [loadUser]);
+  }, []);
 
   return user ? <DrawerStack /> : <AuthStack />;
 }
