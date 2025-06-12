@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../styles';
 import { AuthContext } from '../context/AuthContext';
 import { ApiContext } from '../context/ApiContext';
@@ -8,6 +8,7 @@ import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 const MyActivity = ({ navigation }) => {
   const { user } = useContext(AuthContext);
@@ -29,7 +30,11 @@ const MyActivity = ({ navigation }) => {
   const requestLocationPermissions = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Błąd', 'Brak uprawnień do lokalizacji');
+      Toast.show({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Brak uprawnień do lokalizacji',
+      });
       return false;
     }
     return true;
@@ -104,6 +109,7 @@ const MyActivity = ({ navigation }) => {
     console.log('Start: aktywności ', activityType, 'wartość z API: ', activityTypes[activityType].apiValue);
     await startTracking(newSessionId, activityType);
   };
+
   const handleEndActivity = async () => {
     if (gpsPoints.length > 0) {
       const lastPoint = { ...gpsPoints[gpsPoints.length - 1], last_entry: true };

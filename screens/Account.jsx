@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { globalStyles } from '../styles';
 import Checkbox from 'expo-checkbox';
+import Toast from 'react-native-toast-message';
 
 export default function Account({ navigation }) {
   const { user, editUserDetails } = useContext(AuthContext);
@@ -20,25 +21,45 @@ export default function Account({ navigation }) {
     const gender = isMale ? 'male' : 'female';
 
     if (isNaN(ageNum) || ageNum <= 0) {
-      Alert.alert('Błąd', 'Wiek musi być dodatnią liczbą całkowitą.');
+      Toast.show({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Wiek musi być dodatnią liczbą całkowitą.',
+      });
       return;
     }
     if (isNaN(weightNum) || weightNum <= 0) {
-      Alert.alert('Błąd', 'Waga musi być dodatnią liczbą.');
+      Toast.show({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Waga musi być dodatnią liczbą.',
+      });
       return;
     }
     if (isNaN(heightNum) || heightNum <= 0) {
-      Alert.alert('Błąd', 'Wzrost musi być dodatnią liczbą.');
+      Toast.show({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Wzrost musi być dodatnią liczbą.',
+      });
       return;
     }
 
     try {
       await editUserDetails(weightNum, heightNum, ageNum, gender);
-      Alert.alert('Sukces', 'Dane zostały zapisane!');
+      Toast.show({
+        type: 'success',
+        text1: 'Sukces',
+        text2: 'Dane zostały zapisane!',
+      });
       setIsEditing(false);
     } catch (error) {
       console.error('Błąd podczas zapisywania danych:', error);
-      Alert.alert('Błąd', 'Wystąpił błąd podczas zapisywania danych.');
+      Toast.show({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Wystąpił błąd podczas zapisywania danych.',
+      });
     }
   };
 

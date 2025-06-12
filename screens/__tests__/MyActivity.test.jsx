@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { ApiContext } from '../../context/ApiContext';
 import { LocationContext } from '../../context/LocationContext';
 import * as Location from 'expo-location';
+import Toast from 'react-native-toast-message';
 
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
 
@@ -30,6 +31,8 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
+jest.spyOn(Toast, 'show').mockImplementation(() => {});
+
 const mockAuthContext = {
   user: { id: '123' },
 };
@@ -45,7 +48,7 @@ const mockLocationContext = {
   uploadGpsPoints: jest.fn(),
 };
 
-describe('Ekran Moja Aktuywność', () => {
+describe('Ekran Moja Aktywność', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -153,5 +156,32 @@ describe('Ekran Moja Aktuywność', () => {
     expect(getByText('00:00:05')).toBeTruthy();
 
     jest.useRealTimers();
+  });
+
+  it('Wyświetla błąd, gdy brak uprawnień do lokalizacji', async () => {
+    Location.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'denied' });
+
+    const { getByText } = render(
+      <AuthContext.Provider value={mockAuthContext}>
+        <ApiContext.Provider value={mockApiContext}>
+          <LocationContext.Provider value={mockLocationContext}>
+            <MyActivity />
+          </LocationContext.Provider>
+        </ApiContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    await act(async () => {
+      fireEvent.press(getByText('Bieganie'));
+    });
+
+    await act(async () => {
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Brak uprawnień do lokalizacji',
+      });
+      expect(Location.watchPositionAsync).not.toHaveBeenCalled();
+    });
   });
 });

@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import { NotificationProvider } from './context/NotificationContext';
 import Orientation from 'react-native-orientation-locker';
+import Toast from 'react-native-toast-message';
 
 enableScreens();
 
@@ -45,6 +46,7 @@ export default function App() {
               <NavigationContainer>
                 <AppNavigator />
               </NavigationContainer>
+              <Toast />
             </NotificationProvider>
           </LocationProvider>
         </ApiProvider>

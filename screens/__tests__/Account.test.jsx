@@ -1,9 +1,10 @@
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import Account from '../Account';
 import { AuthContext } from '../../context/AuthContext';
-import { Alert } from 'react-native';
+import Toast from 'react-native-toast-message';
 
-jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+jest.spyOn(Toast, 'show').mockImplementation(() => {});
 
 jest.mock('expo-constants', () => ({
   expoConfig: {
@@ -136,7 +137,11 @@ describe('Komponent Account', () => {
 
     await waitFor(() => {
       expect(mockEditUserDetails).toHaveBeenCalledWith(75.5, 175, 25, 'female');
-      expect(Alert.alert).toHaveBeenCalledWith('Sukces', 'Dane zostały zapisane!');
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'success',
+        text1: 'Sukces',
+        text2: 'Dane zostały zapisane!',
+      });
     });
   });
 
@@ -150,7 +155,11 @@ describe('Komponent Account', () => {
     fireEvent.press(getByText('Zapisz'));
 
     await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith('Błąd', 'Wiek musi być dodatnią liczbą całkowitą.');
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Wiek musi być dodatnią liczbą całkowitą.',
+      });
       expect(mockEditUserDetails).not.toHaveBeenCalled();
     });
   });
@@ -165,7 +174,11 @@ describe('Komponent Account', () => {
     fireEvent.press(getByText('Zapisz'));
 
     await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith('Błąd', 'Waga musi być dodatnią liczbą.');
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Waga musi być dodatnią liczbą.',
+      });
       expect(mockEditUserDetails).not.toHaveBeenCalled();
     });
   });
@@ -180,7 +193,11 @@ describe('Komponent Account', () => {
     fireEvent.press(getByText('Zapisz'));
 
     await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith('Błąd', 'Wzrost musi być dodatnią liczbą.');
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Wzrost musi być dodatnią liczbą.',
+      });
       expect(mockEditUserDetails).not.toHaveBeenCalled();
     });
   });
@@ -196,7 +213,11 @@ describe('Komponent Account', () => {
     fireEvent.press(getByText('Zapisz'));
 
     await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith('Błąd', 'Wystąpił błąd podczas zapisywania danych.');
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'error',
+        text1: 'Błąd',
+        text2: 'Wystąpił błąd podczas zapisywania danych.',
+      });
     });
   });
 

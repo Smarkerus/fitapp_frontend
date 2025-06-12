@@ -3,7 +3,7 @@ import Reminder from '../Reminder';
 import { AuthContext } from '../../context/AuthContext';
 import { NotificationContext } from '../../context/NotificationContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');
@@ -18,6 +18,10 @@ jest.mock('@react-native-firebase/messaging', () => {
     setAutoInitEnabled: jest.fn(),
   });
 });
+
+jest.mock('react-native-toast-message', () => ({
+  show: jest.fn(),
+}));
 
 let mockAsyncStore = {};
 AsyncStorage.getItem = jest.fn().mockImplementation(key => Promise.resolve(mockAsyncStore[key] || null));
@@ -61,6 +65,7 @@ describe('Komponent Przypominajki', () => {
       currentReminder = null;
       return Promise.resolve();
     });
+    jest.clearAllMocks();
   });
 
   const renderComponent = () => {
@@ -141,13 +146,20 @@ describe('Komponent Przypominajki', () => {
     currentReminder = { min_calories: 500, min_distance: 5000, min_time: 3000 };
     renderComponent();
     await waitFor(() => expect(screen.getByText('Twoja przypominajka')).toBeTruthy());
-    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation((title, message, buttons) => {
-      buttons[buttons.length - 1].onPress();
+    const toastSpy = jest.spyOn(Toast, 'show').mockImplementation((options) => {
+      if (options.onPress) {
+        options.onPress();
+      }
     });
     fireEvent.press(screen.getByText('Usuń'));
     await waitFor(() => expect(mockDeleteReminder).toHaveBeenCalled());
     await waitFor(() => expect(AsyncStorage.removeItem).toHaveBeenCalledWith('reminder_test@example.com'));
-    alertSpy.mockRestore();
+    await waitFor(() => expect(Toast.show).toHaveBeenCalledWith({
+      type: 'success',
+      text1: 'Sukces',
+      text2: 'Przypominajka została usunięta',
+    }));
+    toastSpy.mockRestore();
 
     await waitFor(() => {
       expect(screen.getByText(/Nie masz jeszcze/)).toBeTruthy();

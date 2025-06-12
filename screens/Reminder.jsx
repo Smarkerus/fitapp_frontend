@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Alert, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/AuthContext';
 import { NotificationContext } from '../context/NotificationContext';
 import { globalStyles } from '../styles';
+import Toast from 'react-native-toast-message';
 
 export default function Reminder({ navigation }) {
   const { user } = useContext(AuthContext);
@@ -97,23 +98,33 @@ export default function Reminder({ navigation }) {
   }, [formData, reminderData, createReminder, editReminder, loadReminder]);
 
   const handleDelete = useCallback(() => {
-    Alert.alert('Potwierdzenie', 'Czy na pewno chcesz usunąć przypominajkę?', [
-      { text: 'Anuluj', style: 'cancel' },
-      {
-        text: 'Usuń',
-        onPress: async () => {
-          try {
-            await deleteReminder();
-            setReminderData(null);
-            setIsEditing(false);
-            await AsyncStorage.removeItem(`reminder_${user.email}`);
-          } catch (err) {
-            setError('Błąd usuwania przypominajki');
-            console.error('Błąd usuwania przypominajki:', err);
-          }
-        },
+    Toast.show({
+      type: 'info',
+      text1: 'Potwierdzenie',
+      text2: 'Czy na pewno chcesz usunąć przypominajkę?',
+      autoHide: false,
+      onPress: async () => {
+        try {
+          await deleteReminder();
+          setReminderData(null);
+          setIsEditing(false);
+          await AsyncStorage.removeItem(`reminder_${user.email}`);
+          Toast.show({
+            type: 'success',
+            text1: 'Sukces',
+            text2: 'Przypominajka została usunięta',
+          });
+        } catch (err) {
+          setError('Błąd usuwania przypominajki');
+          console.error('Błąd usuwania przypominajki:', err);
+          Toast.show({
+            type: 'error',
+            text1: 'Błąd',
+            text2: 'Błąd usuwania przypominajki',
+          });
+        }
       },
-    ]);
+    });
   }, [user?.email, deleteReminder]);
 
   const renderForm = useCallback(
