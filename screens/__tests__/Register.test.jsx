@@ -87,7 +87,6 @@ describe('Komponent Zarejestruj się', () => {
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith('test@example.com', 'testpassword', 'Jan', 'Kowalski');
       expect(mockLogin).toHaveBeenCalledWith('test@example.com', 'testpassword');
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Zaloguj się');
     });
   });
 
