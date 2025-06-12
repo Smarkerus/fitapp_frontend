@@ -12,7 +12,7 @@
 4. Zainstaluj zależności przy pomocy npm
 
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 5. Stwórz aplikację FCM (Firebase Cloud Messaging) na platformie Firebase. Pobierz informację o tej usłudze w postaci pliku:
