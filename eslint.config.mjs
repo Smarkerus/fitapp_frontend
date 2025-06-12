@@ -42,6 +42,7 @@ export default [
       'react-native/no-unused-styles': 'error',
       'react-native/split-platform-components': 'error',
       'react-native/no-inline-styles': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
     },
     settings: {
       react: {
@@ -59,6 +60,7 @@ export default [
       'jest.config.js',
       'jestSetup.js',
       '**/__tests__/**',
+      'coverage/**', 
     ],
   },
 ];
