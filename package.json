@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "lint:fix": "eslint . --fix",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "jest"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.2",
