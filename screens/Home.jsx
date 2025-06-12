@@ -174,21 +174,23 @@ export default function Home({ navigation }) {
                         </TouchableOpacity>
                       </View>
                     ) : (
-                      statistics.activities.map((activity, index) => (
-                        <View key={index} style={styles.activityCard} testID={`activity-card-${index}`}>
-                          <Text style={styles.activityTitle} testID={`activity-title-${index}`}>
-                            {getActivityTypeName(activity.activity)}
-                          </Text>
-                          <Text testID={`activity-count-${index}`}>Liczba wystąpień: {activity.count}</Text>
-                          <Text testID={`activity-distance-${index}`}>
-                            Dystans: {(activity.distance / 1000).toFixed(2)} km
-                          </Text>
-                          <Text testID={`activity-time-${index}`}>Czas: {formatTime(activity.time)}</Text>
-                          <Text testID={`activity-calories-${index}`}>
-                            Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal
-                          </Text>
-                        </View>
-                      ))
+                      statistics.activities
+                        .sort((a, b) => b.count - a.count)
+                        .map((activity, index) => (
+                          <View key={index} style={styles.activityCard} testID={`activity-card-${index}`}>
+                            <Text style={styles.activityTitle} testID={`activity-title-${index}`}>
+                              {getActivityTypeName(activity.activity)}
+                            </Text>
+                            <Text testID={`activity-count-${index}`}>Liczba wystąpień: {activity.count}</Text>
+                            <Text testID={`activity-distance-${index}`}>
+                              Dystans: {(activity.distance / 1000).toFixed(2)} km
+                            </Text>
+                            <Text testID={`activity-time-${index}`}>Czas: {formatTime(activity.time)}</Text>
+                            <Text testID={`activity-calories-${index}`}>
+                              Spalone Kalorie: {activity.calories_burned.toFixed(0)} kcal
+                            </Text>
+                          </View>
+                        ))
                     )}
                   </View>
                 </ScrollView>
@@ -204,11 +206,13 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   statsCard: {
     ...globalStyles.card,
+    flex: 1,
     marginTop: 20,
   },
   periodSelectors: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    flexWrap: 'nowrap',
     padding: 10,
   },
   periodButton: {
