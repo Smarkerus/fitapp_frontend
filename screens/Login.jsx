@@ -29,6 +29,8 @@ export default function Login({ navigation }) {
           onChangeText={setUsername}
           style={globalStyles.input}
           onSubmitEditing={handleLogin}
+          textContentType="email"
+          autoComplete="email"
         />
         <Text style={globalStyles.subtitle}>Hasło</Text>
         <TextInput
@@ -38,6 +40,8 @@ export default function Login({ navigation }) {
           secureTextEntry
           style={globalStyles.input}
           onSubmitEditing={handleLogin}
+          textContentType="password"
+          autoComplete="password"
         />
         {error ? <Text style={globalStyles.errorText}>{error}</Text> : null}
         <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>

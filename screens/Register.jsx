@@ -25,7 +25,6 @@ export default function Register({ navigation }) {
         name: '',
         last_name: '',
       });
-      navigation.navigate('Zaloguj się');
     } catch (err) {
       console.error('Błąd rejestracji:', err.response?.data);
       setError('Nieprawidłowe dane rejestracji: ' + (err.response?.data?.detail || err.message));
@@ -47,7 +46,7 @@ export default function Register({ navigation }) {
             keyboardType="email-address"
             onSubmitEditing={handleRegister}
             textContentType="email"
-            autoCompleteType="email"
+            autoComplete="email"
           />
           <Text style={globalStyles.subtitle}>Hasło</Text>
           <TextInput
@@ -59,7 +58,7 @@ export default function Register({ navigation }) {
             autoCapitalize="none"
             onSubmitEditing={handleRegister}
             textContentType="password"
-            autoCompleteType="password"
+            autoComplete="password"
           />
           <Text style={globalStyles.subtitle}>Imię</Text>
           <TextInput
@@ -70,7 +69,7 @@ export default function Register({ navigation }) {
             onSubmitEditing={handleRegister}
             autoCapitalize="none"
             textContentType="name"
-            autoCompleteType="name"
+            autoComplete="name"
           />
           <Text style={globalStyles.subtitle}>Nazwisko</Text>
           <TextInput
@@ -81,7 +80,7 @@ export default function Register({ navigation }) {
             onSubmitEditing={handleRegister}
             autoCapitalize="none"
             textContentType="familyName"
-            autoCompleteType="name"
+            autoComplete="family-name"
           />
           {error ? <Text style={globalStyles.errorText}>{error}</Text> : null}
           <TouchableOpacity style={globalStyles.button} onPress={handleRegister}>
