@@ -3,7 +3,6 @@ import Account from '../Account';
 import { AuthContext } from '../../context/AuthContext';
 import Toast from 'react-native-toast-message';
 
-
 jest.spyOn(Toast, 'show').mockImplementation(() => {});
 
 jest.mock('expo-constants', () => ({

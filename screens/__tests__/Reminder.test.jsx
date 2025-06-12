@@ -146,7 +146,7 @@ describe('Komponent Przypominajki', () => {
     currentReminder = { min_calories: 500, min_distance: 5000, min_time: 3000 };
     renderComponent();
     await waitFor(() => expect(screen.getByText('Twoja przypominajka')).toBeTruthy());
-    const toastSpy = jest.spyOn(Toast, 'show').mockImplementation((options) => {
+    const toastSpy = jest.spyOn(Toast, 'show').mockImplementation(options => {
       if (options.onPress) {
         options.onPress();
       }
@@ -154,11 +154,13 @@ describe('Komponent Przypominajki', () => {
     fireEvent.press(screen.getByText('Usuń'));
     await waitFor(() => expect(mockDeleteReminder).toHaveBeenCalled());
     await waitFor(() => expect(AsyncStorage.removeItem).toHaveBeenCalledWith('reminder_test@example.com'));
-    await waitFor(() => expect(Toast.show).toHaveBeenCalledWith({
-      type: 'success',
-      text1: 'Sukces',
-      text2: 'Przypominajka została usunięta',
-    }));
+    await waitFor(() =>
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'success',
+        text1: 'Sukces',
+        text2: 'Przypominajka została usunięta',
+      })
+    );
     toastSpy.mockRestore();
 
     await waitFor(() => {
