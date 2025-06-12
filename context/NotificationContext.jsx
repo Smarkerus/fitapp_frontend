@@ -42,13 +42,13 @@ export const NotificationProvider = ({ children }) => {
     if (user) {
       ensureFcmToken();
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (fcmToken && user) {
       uploadFcmToken();
     }
-  }, []);
+  }, [user, fcmToken]);
 
   const uploadFcmToken = useCallback(async () => {
     if (!fcmToken || typeof fcmToken !== 'string' || fcmToken.trim() === '') {
