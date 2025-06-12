@@ -40,7 +40,7 @@ export const ApiProvider = ({ children }) => {
       setActivityTypes(integratedTypes);
       return integratedTypes;
     } catch (error) {
-      console.error("Wystąpił błąd podczas pobierania typów aktywności:", error);
+      console.error('Wystąpił błąd podczas pobierania typów aktywności:', error);
       throw error;
     }
   }, [user]);
@@ -53,18 +53,18 @@ export const ApiProvider = ({ children }) => {
 
   const fetchUserStatistics = useCallback(
     async (start_time, end_time) => {
-        const response = await axios.post(
-          `${BACKEND_URL}statistics/statistics`,
-          {
-            user_id: user.id,
-            start_time,
-            end_time,
-          },
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          }
-        );
-        return response.data;
+      const response = await axios.post(
+        `${BACKEND_URL}statistics/statistics`,
+        {
+          user_id: user.id,
+          start_time,
+          end_time,
+        },
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+      return response.data;
     },
     [user]
   );
@@ -78,17 +78,17 @@ export const ApiProvider = ({ children }) => {
       const tripDetailsPromises = tripIds.map(tripId => fetchUserTripsDetails(tripId));
       return await Promise.all(tripDetailsPromises);
     } catch (error) {
-      console.error("Wystąpił błąd podczas pobierania tras użytkownika:", error);
+      console.error('Wystąpił błąd podczas pobierania tras użytkownika:', error);
       throw error;
     }
-  }, [user, fetchUserTripsDetails]);
+  }, [user]);
 
   const fetchUserTripsDetails = useCallback(
     async tripId => {
       const response = await axios.get(`${BACKEND_URL}trips/trips/${tripId}`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        return response.data;
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      return response.data;
     },
     [user]
   );

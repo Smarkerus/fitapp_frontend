@@ -12,14 +12,14 @@ export const LocationProvider = ({ children }) => {
 
   const uploadGpsPoints = useCallback(
     async points => {
-        await axios.post(`${BACKEND_URL}gps/`, points, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-        console.log('Punkty GPS zostały pomyślnie przesłane.');
-        return true;
+      await axios.post(`${BACKEND_URL}gps/`, points, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log('Punkty GPS zostały pomyślnie przesłane.');
+      return true;
     },
     [user]
   );

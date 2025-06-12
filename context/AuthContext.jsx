@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         const userData = await fetchUserData(token);
         setUser({ token, ...userData });
       } catch (error) {
-        console.error("Błąd podczas pobierania danych użytkownika:", error);
+        console.error('Błąd podczas pobierania danych użytkownika:', error);
         await logout();
       }
     } else {
@@ -29,31 +29,32 @@ export const AuthProvider = ({ children }) => {
   };
 
   const fetchUserData = async token => {
-      const response = await axios.get(`${BACKEND_URL}users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.data;
+    const response = await axios.get(`${BACKEND_URL}users/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
   };
 
   const login = async (username, password) => {
-      const formData = new URLSearchParams();
-      formData.append('username', username);
-      formData.append('password', password);
+    const formData = new URLSearchParams();
+    formData.append('username', username);
+    formData.append('password', password);
 
-      const response = await axios.post(`${BACKEND_URL}users/login`, formData.toString(), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      });
+    const response = await axios.post(`${BACKEND_URL}users/login`, formData.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      timeout: 10000,
+    });
 
-      const access_token = response.data.access_token;
+    const access_token = response.data.access_token;
 
-      if (Platform.OS === 'web') {
-        await AsyncStorage.setItem('userToken', access_token);
-      } else {
-        await SecureStore.setItemAsync('userToken', access_token);
-      }
+    if (Platform.OS === 'web') {
+      await AsyncStorage.setItem('userToken', access_token);
+    } else {
+      await SecureStore.setItemAsync('userToken', access_token);
+    }
 
-      const userData = await fetchUserData(access_token);
-      setUser({ token: access_token, ...userData });
+    const userData = await fetchUserData(access_token);
+    setUser({ token: access_token, ...userData });
   };
 
   const logout = async () => {
@@ -62,47 +63,47 @@ export const AuthProvider = ({ children }) => {
       await SecureStore.deleteItemAsync('userToken');
       await axios.post(`${BACKEND_URL}users/logout`);
     } catch (error) {
-      console.error("Błąd podczas wylogowywania:", error);
+      console.error('Błąd podczas wylogowywania:', error);
       throw error;
     }
   };
 
   const register = async (email, password, name, last_name) => {
-      await axios.post(
-        `${BACKEND_URL}users/register`,
-        {
-          email,
-          password,
-          name,
-          last_name,
-          weight: null,
-          height: null,
-          age: null,
-          gender: null,
-        },
-        {
-          headers: { 'Content-Type': 'application/json', accept: 'application/json' },
-        }
-      );
+    await axios.post(
+      `${BACKEND_URL}users/register`,
+      {
+        email,
+        password,
+        name,
+        last_name,
+        weight: null,
+        height: null,
+        age: null,
+        gender: null,
+      },
+      {
+        headers: { 'Content-Type': 'application/json', accept: 'application/json' },
+      }
+    );
   };
 
   const editUserDetails = async (weight, height, age, gender) => {
-      const response = await axios.put(
-        `${BACKEND_URL}users/me/details`,
-        {
-          id: user.id,
-          user_id: user.id,
-          weight,
-          height,
-          age,
-          gender,
-        },
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
-      await loadUser();
-      return response.data;
+    const response = await axios.put(
+      `${BACKEND_URL}users/me/details`,
+      {
+        id: user.id,
+        user_id: user.id,
+        weight,
+        height,
+        age,
+        gender,
+      },
+      {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }
+    );
+    await loadUser();
+    return response.data;
   };
 
   return (

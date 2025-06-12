@@ -34,7 +34,7 @@ export default function Home({ navigation }) {
       }
     };
     fetchStats();
-  }, [selectedPeriod, fetchUserStatistics]);
+  }, [selectedPeriod]);
 
   const getActivityTypeName = activityValue => {
     if (!activityTypes) {

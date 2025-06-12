@@ -25,7 +25,7 @@ export default function MyTrips() {
         console.log('Pobrano informacje o trasach: ', userTrips[0]);
       };
       getTrips();
-    }, [fetchUserTrips])
+    }, [])
   );
 
   const computeAverageSpeed = trip => {
@@ -101,7 +101,11 @@ export default function MyTrips() {
           <Text style={globalStyles.listItemSubtitle}>Dystans: {(item.summary.distance / 1000).toFixed(2)} km</Text>
         </TouchableOpacity>
         {expandedTripId === item.summary.trip_id && (
-          <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(300)} style={styles.expandedContainer}>
+          <Animated.View
+            entering={FadeIn.duration(300)}
+            exiting={FadeOut.duration(300)}
+            style={styles.expandedContainer}
+          >
             <Text style={globalStyles.listItemText}>Czas: {(item.summary.duration / 3600).toFixed(2)} h</Text>
             <Text style={globalStyles.listItemText}>Średnia prędkość: {computeAverageSpeed(item).toFixed(2)} km/h</Text>
             <Text style={globalStyles.listItemText}>
