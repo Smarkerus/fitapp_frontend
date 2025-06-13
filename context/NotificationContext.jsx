@@ -25,11 +25,15 @@ export const NotificationProvider = ({ children }) => {
   };
 
   const getToken = async () => {
-    const token = await messaging().getToken();
-    if (Platform.OS === 'android' || Platform.OS === 'ios') {
-      await messaging().setAutoInitEnabled(true);
+    try {
+      if (Platform.OS === 'android' || Platform.OS === 'ios') {
+        await messaging().setAutoInitEnabled(true);
+      }
+      const token = await messaging().getToken();
+      return token;
+    } catch (error) {
+      console.error('Błąd podczas pobierania tokenu FCM:', error);
     }
-    return token;
   };
 
   const ensureFcmToken = useCallback(async () => {

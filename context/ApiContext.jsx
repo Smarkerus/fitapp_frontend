@@ -74,8 +74,7 @@ export const ApiProvider = ({ children }) => {
       const tripsListResponse = await axios.get(`${BACKEND_URL}trips/trips_list`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      const tripIds = tripsListResponse.data.map(trip => trip);
-      const tripDetailsPromises = tripIds.map(tripId => fetchUserTripsDetails(tripId));
+      const tripDetailsPromises = tripsListResponse.data.map(tripId => fetchUserTripsDetails(tripId));
       return await Promise.all(tripDetailsPromises);
     } catch (error) {
       console.error('Wystąpił błąd podczas pobierania tras użytkownika:', error);

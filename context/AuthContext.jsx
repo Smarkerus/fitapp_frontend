@@ -1,8 +1,6 @@
 import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 
 export const AuthContext = createContext();
@@ -45,16 +43,12 @@ export const AuthProvider = ({ children }) => {
       timeout: 10000,
     });
 
-    const access_token = response.data.access_token;
+    const token = response.data.access_token;
 
-    if (Platform.OS === 'web') {
-      await AsyncStorage.setItem('userToken', access_token);
-    } else {
-      await SecureStore.setItemAsync('userToken', access_token);
-    }
+    await SecureStore.setItemAsync('userToken', token);
 
-    const userData = await fetchUserData(access_token);
-    setUser({ token: access_token, ...userData });
+    const userData = await fetchUserData(token);
+    setUser({ token: token, ...userData });
   };
 
   const logout = async () => {
