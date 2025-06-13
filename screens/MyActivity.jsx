@@ -188,7 +188,7 @@ const MyActivity = ({ navigation }) => {
                 <Text style={globalStyles.buttonText}>{activityTypes[key].label}</Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity onPress={resetGpsPointsStorage} style={globalStyles.button}>
+            <TouchableOpacity onPress={resetGpsPointsStorage} style={[globalStyles.button, styles.stopButton]}>
               <Text style={globalStyles.buttonText}>Resetuj pamięć GPS</Text>
             </TouchableOpacity>
           </View>
