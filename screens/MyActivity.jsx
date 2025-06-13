@@ -81,13 +81,12 @@ const MyActivity = ({ navigation }) => {
         distanceInterval: 10,
       },
       location => {
-        const randomOffset = () => (Math.random() - 0.5) * 0.0001;
         const point = {
           session_id: sessionId,
           timestamp: new Date().toISOString(),
           user_id: user.id,
-          latitude: location.coords.latitude + randomOffset(),
-          longitude: location.coords.longitude + randomOffset(),
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
           acceleration: 0,
           activity: activityTypes[activityType].apiValue,
           last_entry: false,
@@ -119,13 +118,12 @@ const MyActivity = ({ navigation }) => {
         const location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.High,
         });
-        const randomOffset = () => (Math.random() - 0.5) * 0.0001;
         const point = {
           session_id: sessionId,
           timestamp: new Date().toISOString(),
           user_id: user.id,
-          latitude: location.coords.latitude + randomOffset(),
-          longitude: location.coords.longitude + randomOffset(),
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
           acceleration: 0,
           activity: activityTypes[selectedActivity].apiValue,
           last_entry: true,
