@@ -1,6 +1,7 @@
 import { render, fireEvent, waitFor, cleanup } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 import Home from '../Home';
+import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '../../context/AuthContext';
 import { ApiContext } from '../../context/ApiContext';
 
@@ -57,17 +58,19 @@ const mockStatistics = {
 
 const renderWithProviders = (component, { authValue = {}, apiValue = {} } = {}) => {
   return render(
-    <AuthContext.Provider value={{ user: mockUser, ...authValue }}>
-      <ApiContext.Provider
-        value={{
-          fetchUserStatistics: mockFetchUserStatistics,
-          activityTypes: mockActivityTypes,
-          ...apiValue,
-        }}
-      >
-        {component}
-      </ApiContext.Provider>
-    </AuthContext.Provider>
+    <NavigationContainer>
+      <AuthContext.Provider value={{ user: mockUser, ...authValue }}>
+        <ApiContext.Provider
+          value={{
+            fetchUserStatistics: mockFetchUserStatistics,
+            activityTypes: mockActivityTypes,
+            ...apiValue,
+          }}
+        >
+          {component}
+        </ApiContext.Provider>
+      </AuthContext.Provider>
+    </NavigationContainer>
   );
 };
 

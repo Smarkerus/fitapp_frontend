@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { ApiContext } from '../context/ApiContext';
@@ -20,27 +21,30 @@ export default function Home({ navigation }) {
     { label: 'Dzisiaj', value: 'today' },
   ];
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      setIsLoadingStats(true);
-      const { start_date, end_date } = getDateRange(selectedPeriod);
-      try {
-        const stats = await fetchUserStatistics(start_date, end_date);
-        setStatistics(stats);
-      } catch (error) {
-        console.error('Błąd podczas pobierania statystyk:', error);
-      } finally {
-        setIsLoadingStats(false);
-      }
-    };
-    fetchStats();
-  }, [selectedPeriod]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchStats = async () => {
+        setIsLoadingStats(true);
+        const { start_date, end_date } = getDateRange(selectedPeriod);
+        try {
+          const stats = await fetchUserStatistics(start_date, end_date);
+          setStatistics(stats);
+        } catch (error) {
+          console.error('Błąd podczas pobierania statystyk:', error);
+        } finally {
+          setIsLoadingStats(false);
+        }
+      };
+
+      fetchStats();
+    }, [selectedPeriod, fetchUserStatistics])
+  );
 
   const getActivityTypeName = activityValue => {
     if (!activityTypes) {
       return 'Ładowanie typów aktywności...';
     }
-    const activityType = Object.values(activityTypes).find(type => type.apiValue === activityValue);
+    const [activityType] = Object.values(activityTypes).filter(type => type.apiValue === activityValue);
     return activityType ? activityType.label : 'Nieznany typ aktywności';
   };
 
@@ -162,7 +166,7 @@ export default function Home({ navigation }) {
                   <View style={styles.statsContainer} testID="activity-ranking-container">
                     {statistics.activities.length === 0 ? (
                       <View style={globalStyles.centeredContainer} testID="no-activities-container">
-                        <Text style={globalStyles.subtitle} testID="no-activities-message">
+                        <Text style={globalStyles.infoText} testID="no-activities-message">
                           Hej, nie masz jeszcze żadnych aktywności w tym okresie! Może czas się poruszać?
                         </Text>
                         <TouchableOpacity

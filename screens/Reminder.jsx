@@ -170,7 +170,7 @@ export default function Reminder({ navigation }) {
     () => (
       <View>
         <Text style={globalStyles.title}>Twoja przypominajka</Text>
-        <Text style={styles.infoText}>
+        <Text style={globalStyles.infoText}>
           Zawsze możesz zaktualizować swoją przypominajkę, aby osiągać jeszcze lepsze rezultaty treningu!
         </Text>
         <View style={globalStyles.card}>
@@ -192,9 +192,8 @@ export default function Reminder({ navigation }) {
   const renderNoReminder = useCallback(
     () => (
       <View>
-        <Text style={globalStyles.title}>
-          Nie masz jeszcze ustawionej przypominajki. Ustaw ją, by już zawsze pamiętać o swoim treningu!
-        </Text>
+        <Text style={globalStyles.title}>Nie masz jeszcze ustawionej przypominajki!</Text>
+        <Text style={globalStyles.infoText}>Ustaw ją, by już zawsze pamiętać o swoim treningu!</Text>
         <TouchableOpacity style={globalStyles.button} onPress={() => setIsEditing(true)}>
           <Text style={globalStyles.buttonText}>Utwórz przypominajkę</Text>
         </TouchableOpacity>
@@ -217,12 +216,3 @@ export default function Reminder({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  infoText: {
-    fontSize: globalStyles.sizes.medium,
-    color: globalStyles.colors.darkGray,
-    marginBottom: globalStyles.spacing.medium,
-    textAlign: 'center',
-  },
-});

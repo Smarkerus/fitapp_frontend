@@ -141,7 +141,7 @@ export default function MyTrips({ navigation }) {
   if (trips.length === 0) {
     return (
       <View style={[globalStyles.background, globalStyles.centeredContainer]}>
-        <Text style={globalStyles.subtitle}>
+        <Text style={globalStyles.infoText}>
           Hej, nie masz jeszcze żadnych tras! Może czas rozpocząć jakąś aktywność?
         </Text>
         <TouchableOpacity style={globalStyles.button} onPress={() => navigation.navigate('Nowa aktywność')}>

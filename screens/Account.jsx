@@ -76,7 +76,7 @@ export default function Account({ navigation }) {
     <View style={globalStyles.background}>
       <View style={globalStyles.container}>
         <Text style={globalStyles.title}>Profil użytkownika</Text>
-        <Text style={styles.infoText}>
+        <Text style={globalStyles.infoText}>
           Tutaj możesz zaktualizować swoje dane – dzięki nim dostosujemy Twój plan, byś zawsze był w szczytowej formie i
           osiągał swoje cele!
         </Text>
@@ -177,12 +177,6 @@ export default function Account({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  infoText: {
-    fontSize: globalStyles.sizes.medium,
-    color: globalStyles.colors.darkGray,
-    marginBottom: globalStyles.spacing.medium,
-    textAlign: 'center',
-  },
   separator: {
     height: 1,
     backgroundColor: globalStyles.colors.lightGray,

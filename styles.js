@@ -128,6 +128,7 @@ export const globalStyles = StyleSheet.create({
     fontSize: sizes.large,
     color: colors.darkGray,
     marginBottom: spacing.small,
+    marginHorizontal: spacing.small,
   },
   welcome: {
     fontSize: sizes.xLarge,
@@ -140,6 +141,12 @@ export const globalStyles = StyleSheet.create({
     color: colors.error,
     fontSize: sizes.small,
     marginTop: spacing.small,
+  },
+  infoText: {
+    fontSize: sizes.medium,
+    color: colors.darkGray,
+    marginBottom: spacing.medium,
+    textAlign: 'center',
   },
   listContainer: {
     flex: 1,
