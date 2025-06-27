@@ -38,7 +38,13 @@
        GOOGLE_MAPS_API_KEY=KLUCZ_GOOGLE_MAPS
    ```
 
-8. W pliku context/AuthContext.jsx sprawdź wartość stałej BACKEND_URL. Na potrzeby lokalnego debugowania dostosuj ją w taki sposób, aby urządzenie lub emulator Androida było w stanie skomunikować się z API w ramach tej samej sieci.
+8. W pliku .env dodaj zmienną BACKEND_URL wskazującą na adres (wraz z określonym protokołem i portem), pod którym aplikacja będzie mogła łączyć się z usługą Backendu. Na potrzeby lokalnego debugowania dostosuj ją w taki sposób, aby urządzenie lub emulator Androida było w stanie skomunikować się z API w ramach tej samej sieci. Przykładowo:
+
+   ```bash
+   .env:
+       BACKEND_URL=http://10.0.2.2:8000
+   ```
+
 9. Upewnij się, że masz zainstalowane Android Studio, a także zainstalowałeś i uruchomiłeś emulator urządzenia z co najmniej jednym 'działającym Androidem'
 10. Uruchomienie projektu możliwe jest poprzez wykonanie polecenia:
 
